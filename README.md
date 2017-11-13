@@ -4,6 +4,16 @@ This branch contains WebRTC project-wide configurations
 for chrome-infra services.
 For example, [cr-buildbucket.cfg](cr-buildbucket.cfg) defines builders.
 
+## Submitting patches
+
+NOTE: Changes in this branch are submitted as usual, but you can NOT use the
+CQ. See http://crbug.com/719954. Therefore, you need to add
+
+No-Try:true
+No-Presubmit:true
+
+to your CL description before submitting, or use Submit from the More menu.
+
 ## Making changes
 
 It is recommended to have a separate checkout for this branch, so switching
