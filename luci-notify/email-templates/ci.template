@@ -1,0 +1,36 @@
+[Build Status] Builder "{{ .Build.Builder.IDString }}"
+
+luci-notify detected a status change for builder "{{ .Build.Builder.IDString }}"
+at {{ .Build.EndTime | time }}.
+
+<table>
+  <tr>
+    <td>New status:</td>
+    <td><b>{{ .Build.Status }}</b></td>
+  </tr>
+  <tr>
+    <td>Previous status:</td>
+    <td>{{ .OldStatus }}</td>
+  </tr>
+  <tr>
+    <td>Builder:</td>
+    <td>{{ .Build.Builder.IDString }}</td>
+  </tr>
+  <tr>
+    <td>Created by:</td>
+    <td>{{ .Build.CreatedBy }}</td>
+  </tr>
+  <tr>
+    <td>Created at:</td>
+    <td>{{ .Build.CreateTime | time }}</td>
+  </tr>
+  <tr>
+    <td>Finished at:</td>
+    <td>{{ .Build.EndTime | time }}</td>
+  </tr>
+</table>
+
+<a href="{{ .Build.ViewUrl }}">Full details are available here.</a><br/><br/>
+
+You are receiving the default template as no template was provided or a template
+name did not match the one provided.
