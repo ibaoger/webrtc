@@ -215,6 +215,7 @@ def ci_builder(
         properties = {},
         dimensions = {},
         prioritized = False,
+        enabled = True,
         **kwargs):
     if prioritized:
         kwargs["triggering_policy"] = scheduler.greedy_batching(
@@ -223,14 +224,15 @@ def ci_builder(
         )
         kwargs["priority"] = 29
 
-    add_milo(name, {"ci": ci_cat, "perf": perf_cat, "fyi": fyi_cat})
+    if enabled:
+        add_milo(name, {"ci": ci_cat, "perf": perf_cat, "fyi": fyi_cat})
     return webrtc_builder(
         name = name,
         properties = merge_dicts({"mastername": "client.webrtc"}, properties),
         dimensions = merge_dicts({"pool": "luci.webrtc.ci"}, dimensions),
         bucket = "ci",
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
-        triggered_by = ["webrtc-gitiles-trigger-master"],
+        triggered_by = ["webrtc-gitiles-trigger-master"] if enabled else None,
         **kwargs
     )
 
