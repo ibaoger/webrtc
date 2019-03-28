@@ -7,10 +7,10 @@ services, mainly the CI system ([console][]).
 They are in *protocol buffer text format*. For example,
 [cr-buildbucket.cfg](cr-buildbucket.cfg) defines builders.
 
-However, most of them (luci-notify is the exception) are automatically generated
-from the [Starlark][] script [config.star](config.star) that defines a unified
-config using **[lucicfg][]**. The main body of the config is at the bottom of
-the file, following all the helper definitions.
+However, they are all automatically generated from the [Starlark][] script
+[config.star](config.star) that defines a unified config using **[lucicfg][]**.
+The main body of the config is at the bottom of the file, following all the
+helper definitions.
 
 `lucicfg` should be available as part of depot_tools. After editing
 [config.star](config.star) you should run `lucicfg generate config.star` to

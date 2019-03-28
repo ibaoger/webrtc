@@ -18,6 +18,7 @@ lucicfg.config(
         "cr-buildbucket.cfg",
         "luci-logdog.cfg",
         "luci-milo.cfg",
+        "luci-notify.cfg",
         "luci-scheduler.cfg",
         "project.cfg",
     ],
@@ -28,6 +29,7 @@ luci.project(
     buildbucket = "cr-buildbucket.appspot.com",
     logdog = "luci-logdog.appspot.com",
     milo = "luci-milo.appspot.com",
+    notify = "luci-notify.appspot.com",
     scheduler = "luci-scheduler.appspot.com",
     swarming = "chromium-swarm.appspot.com",
     acls = [
@@ -134,6 +136,22 @@ luci.cq_tryjob_verifier(
     cq_group = "infra_cq",
 )
 
+# Notifier definitions:
+
+luci.notifier(
+    name = "ci_notifier",
+    on_failure = True,
+    notify_emails = ["webrtc-sheriffs-robots@google.com"],
+    template = "ci",
+)
+
+luci.notifier(
+    name = "cron_notifier",
+    on_failure = True,
+    notify_emails = ["webrtc-troopers-robots@google.com"],
+    template = "cron",
+)
+
 # Recipe definitions:
 
 def recipe(recipe, pkg = "infra/recipe_bundles/chromium.googlesource.com/chromium/tools/build"):
@@ -233,6 +251,8 @@ def ci_builder(
         bucket = "ci",
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         triggered_by = ["webrtc-gitiles-trigger-master"] if enabled else None,
+        repo = WEBRTC_GIT,
+        notifies = ["ci_notifier"] if enabled else None,
         **kwargs
     )
 
@@ -291,6 +311,8 @@ def cron_builder(name, dimensions = {}, **kwargs):
         dimensions = merge_dicts({"pool": "luci.webrtc.cron", "os": "Linux"}, dimensions),
         bucket = "cron",
         service_account = "chromium-webrtc-autoroll@webrtc-ci.iam.gserviceaccount.com",
+        repo = WEBRTC_GIT,
+        notifies = ["cron_notifier"],
         **kwargs
     )
 
