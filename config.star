@@ -19,6 +19,7 @@ lucicfg.config(
         "luci-logdog.cfg",
         "luci-milo.cfg",
         "luci-notify.cfg",
+        "luci-notify/**/*",
         "luci-scheduler.cfg",
         "project.cfg",
     ],
@@ -142,14 +143,20 @@ luci.notifier(
     name = "ci_notifier",
     on_failure = True,
     notify_emails = ["webrtc-sheriffs-robots@google.com"],
-    template = "ci",
+    template = luci.notifier_template(
+        name = "ci",
+        body = io.read_file("luci-notify/email-templates/ci.template"),
+    ),
 )
 
 luci.notifier(
     name = "cron_notifier",
     on_failure = True,
     notify_emails = ["webrtc-troopers-robots@google.com"],
-    template = "cron",
+    template = luci.notifier_template(
+        name = "cron",
+        body = io.read_file("luci-notify/email-templates/cron.template"),
+    ),
 )
 
 # Recipe definitions:
@@ -216,7 +223,7 @@ def webrtc_builder(name, recipe = "standalone", dimensions = {}, priority = 30, 
 
     return luci.builder(
         name = name,
-        recipe = recipe,
+        executable = recipe,
         dimensions = {k: v for k, v in dimensions.items() if v != None},
         execution_timeout = 2 * time.hour,
         priority = priority,
