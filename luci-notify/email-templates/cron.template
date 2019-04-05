@@ -1,6 +1,6 @@
 {{ .Build.Builder.Builder }} failed to run
 
-<p>There was a failure on builder "{{ .Build.Builder.IDString }}".</p>
+<p>There was a failure on builder "{{ .Build.Builder.Builder }}".</p>
 
 <p><a href="https://ci.chromium.org/b/{{ .Build.Id }}">Full details are available here.</a></p>
 
