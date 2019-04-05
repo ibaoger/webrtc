@@ -259,7 +259,7 @@ def ci_builder(
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         triggered_by = ["webrtc-gitiles-trigger-master"] if enabled else None,
         repo = WEBRTC_GIT,
-        notifies = ["ci_notifier"] if enabled else None,
+        notifies = ["ci_notifier"] if enabled and (ci_cat or perf_cat) else None,
         **kwargs
     )
 
