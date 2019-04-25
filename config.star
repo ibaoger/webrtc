@@ -242,6 +242,23 @@ def ci_builder(
         prioritized = False,
         enabled = True,
         **kwargs):
+    """Add a post-submit builder.
+
+    Args:
+      name: builder name (str).
+      ci_cat: the category + name for the /ci/ console, or None to omit from the console.
+      perf_cat: the category + name for the /perf/ console, or None to omit from the console.
+      fyi_cat: the category + name for the /fyi/ console, or None to omit from the console.
+      properties: dict of properties to pass to the recipe (on top of the default ones).
+      dimensions: dict of Swarming dimensions (strings) to search machines by.
+      prioritized: True to make this builder have a higher priority and never batch builds.
+      enabled: False to exclude this builder from consoles and failure notifications.
+      **kwargs: Pass on to webrtc_builder / luci.builder.
+    Returns:
+      A luci.builder.
+
+    Notifications are also disabled if a builder is not on either of /ci/ or /perf/ consoles.
+    """
     if prioritized:
         kwargs["triggering_policy"] = scheduler.greedy_batching(
             max_batch_size = 1,
@@ -271,6 +288,19 @@ def try_builder(
         dimensions = {},
         cq = {},
         **kwargs):
+    """Add a pre-submit builder.
+
+    Args:
+      name: builder name (str).
+      try_cat: boolean, whether to include this builder in the /try/ console. See also: `add_milo`.
+      fyi_cat: the category + name for the /fyi/ console, or None to omit from the console.
+      properties: dict of properties to pass to the recipe (on top of the default ones).
+      dimensions: dict of Swarming dimensions (strings) to search machines by.
+      cq: None to exclude this from all commit queues, or a dict of kwargs for cq_tryjob_verifier.
+      **kwargs: Pass on to webrtc_builder / luci.builder.
+    Returns:
+      A luci.builder.
+    """
     add_milo(name, {"try": try_cat, "fyi": fyi_cat})
     if cq != None:
         luci.cq_tryjob_verifier(
