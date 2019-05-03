@@ -78,7 +78,9 @@ luci.bucket(
 luci.bucket(
     name = "ci",
     acls = [
-        acl.entry(acl.BUILDBUCKET_TRIGGERER, users = [
+        acl.entry(acl.BUILDBUCKET_TRIGGERER, groups = [
+            "project-webrtc-ci-schedulers",
+        ], users = [
             "luci-scheduler@appspot.gserviceaccount.com",
         ]),
     ],
