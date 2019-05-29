@@ -572,7 +572,7 @@ linux_try_job(
     cq = {"disable_reuse": True},
 )
 linux_try_job("noop", recipe = "noop", cq = {
-    "equivalent_builder": "external/*/g3.webrtc-internal.try/internal_compile_lite",
+    "equivalent_builder": "*:g3.webrtc-internal.try/internal_compile_lite",
     "equivalent_builder_percentage": 100,
     "equivalent_builder_whitelist": "project-webrtc-internal-tryjob-access",
 }, branch_cq = False)
