@@ -143,6 +143,12 @@ luci.cq_tryjob_verifier(
     cq_group = "cq_infra",
 )
 
+luci.cq_tryjob_verifier(
+    builder = "webrtc-internal:g3.webrtc-internal.try/internal_compile_lite",
+    owner_whitelist = ["project-webrtc-internal-tryjob-access"],
+    cq_group = "cq",
+)
+
 # Notifier definitions:
 
 luci.notifier(
@@ -182,7 +188,6 @@ recipe("webrtc/ios")
 recipe("webrtc/ios_api_framework")
 recipe("webrtc/libfuzzer")
 recipe("webrtc/more_configs")
-recipe("webrtc/noop")
 recipe("webrtc/standalone")
 recipe("lkgr_finder", pkg = "infra/recipe_bundles/chromium.googlesource.com/infra/infra")
 
@@ -575,11 +580,6 @@ linux_try_job(
     priority = 28,
     cq = {"disable_reuse": True},
 )
-linux_try_job("noop", recipe = "noop", cq = {
-    "equivalent_builder": "webrtc-internal:g3.webrtc-internal.try/internal_compile_lite",
-    "equivalent_builder_percentage": 100,
-    "equivalent_builder_whitelist": "project-webrtc-internal-tryjob-access",
-}, branch_cq = False)
 
 cron_builder(
     "Auto-roll - WebRTC DEPS",
