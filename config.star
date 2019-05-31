@@ -222,6 +222,8 @@ def add_milo(builder, views):
         else:
             fail("Unexpected value for category: %r" % category)
 
+lkgr_builders = {}
+
 # Builder-defining functions:
 
 def webrtc_builder(name, recipe = "standalone", dimensions = {}, priority = 30, **kwargs):
@@ -274,6 +276,8 @@ def ci_builder(
 
     if enabled:
         add_milo(name, {"ci": ci_cat, "perf": perf_cat, "fyi": fyi_cat})
+        if ci_cat:
+            lkgr_builders[name] = True
     return webrtc_builder(
         name = name,
         properties = merge_dicts({"mastername": "client.webrtc"}, properties),
@@ -582,9 +586,54 @@ cron_builder(
     recipe = "auto_roll_webrtc_deps",
     schedule = "0 */1 * * *",  # Hourly.
 )
+
+lkgr_config = {
+    "project": "webrtc",
+    "source_url": WEBRTC_GIT,
+    "status_url": "https://webrtc-status.appspot.com",
+    "allowed_lag": 300,  # hours
+    "allowed_gap": 12,  # commits behind
+    "error_recipients": "webrtc-troopers-robots@google.com",
+    "masters": {
+        "client.webrtc": {
+            "base_url": "https://build.chromium.org/p/client.webrtc",
+            "builders": sorted(lkgr_builders),
+        },
+        "chromium.webrtc.fyi": {
+            "base_url": "https://build.chromium.org/p/chromium.webrtc.fyi",
+            "builders": [
+                "WebRTC Chromium FYI Android Builder (dbg)",
+                "WebRTC Chromium FYI Android Builder ARM64 (dbg)",
+                "WebRTC Chromium FYI Android Builder",
+                "WebRTC Chromium FYI Android Tests (dbg) (K Nexus5)",
+                "WebRTC Chromium FYI Android Tests (dbg) (M Nexus5X)",
+                "WebRTC Chromium FYI Linux Builder (dbg)",
+                "WebRTC Chromium FYI Linux Builder",
+                "WebRTC Chromium FYI Linux Tester",
+                "WebRTC Chromium FYI Mac Builder (dbg)",
+                "WebRTC Chromium FYI Mac Builder",
+                "WebRTC Chromium FYI Mac Tester",
+                "WebRTC Chromium FYI Win Builder (dbg)",
+                "WebRTC Chromium FYI Win Builder",
+                "WebRTC Chromium FYI Win10 Tester",
+                "WebRTC Chromium FYI Win7 Tester",
+                "WebRTC Chromium FYI Win8 Tester",
+                "WebRTC Chromium FYI ios-device",
+                "WebRTC Chromium FYI ios-simulator",
+            ],
+        },
+    },
+}
+
 cron_builder(
     "WebRTC lkgr finder",
     recipe = "lkgr_finder",
-    properties = {"lkgr_project": "webrtc", "allowed_lag": 4},
+    properties = {
+        "project": "webrtc",
+        "repo": WEBRTC_GIT,
+        "ref": "refs/heads/lkgr",
+        "lkgr_status_gs_path": "chromium-webrtc/lkgr-status",
+        "config": lkgr_config,
+    },
     schedule = "*/10 * * * *",  # Every 10 minutes.
 )
