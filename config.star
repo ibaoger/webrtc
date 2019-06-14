@@ -575,11 +575,6 @@ linux_try_job(
     priority = 28,
     cq = {"disable_reuse": True},
 )
-linux_try_job("noop", recipe = "noop", cq = {
-    "equivalent_builder": "*:g3.webrtc-internal.try/internal_compile_lite",
-    "equivalent_builder_percentage": 100,
-    "equivalent_builder_whitelist": "project-webrtc-internal-tryjob-access",
-}, branch_cq = False)
 
 cron_builder(
     "Auto-roll - WebRTC DEPS",
