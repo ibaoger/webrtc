@@ -584,7 +584,7 @@ linux_try_job(
 cron_builder(
     "Auto-roll - WebRTC DEPS",
     recipe = "auto_roll_webrtc_deps",
-    schedule = "0 */1 * * *",  # Hourly.
+    schedule = "0 */2 * * *",  # Every 2 hours.
 )
 
 lkgr_config = {
