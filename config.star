@@ -595,13 +595,13 @@ lkgr_config = {
     "allowed_lag": 300,  # hours
     "allowed_gap": 12,  # commits behind
     "error_recipients": "webrtc-troopers-robots@google.com",
-    "masters": {
-        "client.webrtc": {
-            "base_url": "https://build.chromium.org/p/client.webrtc",
+    "buckets": {
+        "webrtc/ci": {
+            # bucket alias: luci.webrtc.ci
             "builders": sorted(lkgr_builders),
         },
-        "chromium.webrtc.fyi": {
-            "base_url": "https://build.chromium.org/p/chromium.webrtc.fyi",
+        "chromium/webrtc.fyi": {
+            # bucket alias: luci.chromium.webrtc.fyi
             "builders": [
                 "WebRTC Chromium FYI Android Builder (dbg)",
                 "WebRTC Chromium FYI Android Builder ARM64 (dbg)",
