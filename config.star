@@ -116,6 +116,7 @@ luci.cq_group(
         acl.entry(acl.CQ_DRY_RUNNER, groups = ["project-webrtc-tryjob-access"]),
     ],
     retry_config = cq.RETRY_ALL_FAILURES,
+    cancel_stale_tryjobs = True,
 )
 
 luci.cq_group(
@@ -126,6 +127,7 @@ luci.cq_group(
         acl.entry(acl.CQ_DRY_RUNNER, groups = ["project-webrtc-tryjob-access"]),
     ],
     retry_config = cq.RETRY_ALL_FAILURES,
+    cancel_stale_tryjobs = True,
 )
 
 luci.cq_group(
@@ -136,6 +138,7 @@ luci.cq_group(
         acl.entry(acl.CQ_DRY_RUNNER, groups = ["project-webrtc-tryjob-access"]),
     ],
     retry_config = cq.RETRY_ALL_FAILURES,
+    cancel_stale_tryjobs = True,
 )
 
 luci.cq_tryjob_verifier(
