@@ -234,14 +234,20 @@ lkgr_builders = {}
 
 # Builder-defining functions:
 
-def webrtc_builder(name, recipe = "standalone", dimensions = {}, priority = 30, **kwargs):
+def webrtc_builder(
+        name,
+        recipe = "standalone",
+        dimensions = {},
+        priority = 30,
+        execution_timeout = 2 * time.hour,
+        **kwargs):
     dimensions = merge_dicts({"cpu": "x86-64"}, dimensions)
 
     return luci.builder(
         name = name,
         executable = recipe,
         dimensions = {k: v for k, v in dimensions.items() if v != None},
-        execution_timeout = 2 * time.hour,
+        execution_timeout = execution_timeout,
         priority = priority,
         build_numbers = True,
         swarming_tags = ["vpython:native-python-wrapper"],
@@ -364,6 +370,7 @@ def perf_builder(
         # P:  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 ...
         # B:  1  1  2  2  3  3  3  3  4  4  4  4  4  4  5 ...
         triggering_policy = scheduler.logarithmic_batching(log_base = 17 / 10),
+        execution_timeout = 3 * time.hour,
         **kwargs
     )
 
