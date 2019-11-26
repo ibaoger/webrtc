@@ -9,6 +9,13 @@
 WEBRTC_GIT = "https://webrtc.googlesource.com/src"
 WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
 
+GOMA_BACKEND_RBE_PROD = {
+    "$build/goma": {
+        "server_host": "goma.chromium.org",
+        "rpc_extra_params": "?prod"
+    }
+}
+
 # Top-level configs:
 
 lucicfg.config(
@@ -436,6 +443,7 @@ win_builder, win_try_job = normal_builder_factory(
 
 mac_builder, mac_try_job = normal_builder_factory(
     dimensions = {"os": "Mac"},
+    properties = GOMA_BACKEND_RBE_PROD,
 )
 
 ios_builder, ios_try_job = normal_builder_factory(
