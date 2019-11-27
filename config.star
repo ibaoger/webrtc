@@ -431,10 +431,12 @@ def normal_builder_factory(**common_kwargs):
 
 linux_builder, linux_try_job = normal_builder_factory(
     dimensions = {"os": "Linux", "inside_docker": "0"},
+    properties = GOMA_BACKEND_RBE_PROD,
 )
 
 android_builder, android_try_job = normal_builder_factory(
     dimensions = {"os": "Linux"},
+    properties = GOMA_BACKEND_RBE_PROD,
 )
 
 win_builder, win_try_job = normal_builder_factory(
