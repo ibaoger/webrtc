@@ -441,6 +441,7 @@ android_builder, android_try_job = normal_builder_factory(
 
 win_builder, win_try_job = normal_builder_factory(
     dimensions = {"os": "Windows"},
+    properties = GOMA_BACKEND_RBE_PROD,
 )
 
 mac_builder, mac_try_job = normal_builder_factory(
