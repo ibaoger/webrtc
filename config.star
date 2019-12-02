@@ -451,7 +451,7 @@ mac_builder, mac_try_job = normal_builder_factory(
 ios_builder, ios_try_job = normal_builder_factory(
     dimensions = {"os": "Mac-10.13"},
     recipe = "ios",
-    properties = {"$depot_tools/osx_sdk": {"sdk_version": "10l232m"}},
+    properties = {"$depot_tools/osx_sdk": {"sdk_version": "11a1027"}},
     caches = [swarming.cache("osx_sdk")],
 )
 
