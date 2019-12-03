@@ -16,14 +16,6 @@ GOMA_BACKEND_RBE_PROD = {
     }
 }
 
-GOMA_BACKEND_RBE_ATS_PROD = {
-    "$build/goma": {
-        "server_host": "goma.chromium.org",
-        "rpc_extra_params": "?prod",
-        "enable_ats": "true"
-    }
-}
-
 # Top-level configs:
 
 lucicfg.config(
@@ -449,7 +441,6 @@ android_builder, android_try_job = normal_builder_factory(
 
 win_builder, win_try_job = normal_builder_factory(
     dimensions = {"os": "Windows"},
-    properties = GOMA_BACKEND_RBE_ATS_PROD,
 )
 
 mac_builder, mac_try_job = normal_builder_factory(
