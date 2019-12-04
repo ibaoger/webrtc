@@ -507,7 +507,7 @@ ios_try_job("ios_sim_x64_dbg_ios10")
 ios_builder("iOS64 Sim Debug (iOS 11)", "iOS|x64|11")
 ios_try_job("ios_sim_x64_dbg_ios11")
 ios_builder("iOS64 Sim Debug (iOS 12)", "iOS|x64|12")
-ios_try_job("ios_sim_x64_dbg_ios12", cq = None)
+ios_try_job("ios_sim_x64_dbg_ios12")
 ios_builder("iOS API Framework Builder", "iOS|fat|size", recipe = "ios_api_framework", prioritized = True)
 ios_try_job("ios_api_framework", recipe = "ios_api_framework")
 
