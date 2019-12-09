@@ -603,7 +603,7 @@ win_builder("Win64 UWP", ci_cat = None, fyi_cat = "")
 win_try_job("win_x64_uwp", cq = None, try_cat = None, fyi_cat = "")
 win_builder("Win (more configs)", "Win Clang|x86|more", recipe = "more_configs")
 win_try_job("win_x86_more_configs", recipe = "more_configs")
-win_try_job_without_goma_rbe("win_chromium_compile", recipe = "chromium_trybot", branch_cq = False)
+win_try_job("win_chromium_compile", recipe = "chromium_trybot", branch_cq = False)
 win_try_job_without_goma_rbe("win_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False)
 
 linux_try_job(
