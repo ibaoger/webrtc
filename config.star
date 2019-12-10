@@ -452,12 +452,6 @@ win_builder, win_try_job = normal_builder_factory(
     properties = GOMA_BACKEND_RBE_ATS_PROD,
 )
 
-# TODO(https://bugs.webrtc.org/11181): Make win chromium bots use goma RBE and
-# delete this after we figure out what's wrong with them.
-win_builder_without_goma_rbe, win_try_job_without_goma_rbe = normal_builder_factory(
-    dimensions = {"os": "Windows"},
-)
-
 mac_builder, mac_try_job = normal_builder_factory(
     dimensions = {"os": "Mac"},
     properties = GOMA_BACKEND_RBE_PROD,
@@ -604,7 +598,7 @@ win_try_job("win_x64_uwp", cq = None, try_cat = None, fyi_cat = "")
 win_builder("Win (more configs)", "Win Clang|x86|more", recipe = "more_configs")
 win_try_job("win_x86_more_configs", recipe = "more_configs")
 win_try_job("win_chromium_compile", recipe = "chromium_trybot", branch_cq = False)
-win_try_job_without_goma_rbe("win_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False)
+win_try_job("win_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False)
 
 linux_try_job(
     "presubmit",
