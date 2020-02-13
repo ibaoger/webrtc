@@ -646,7 +646,8 @@ lkgr_config = {
                 "WebRTC Chromium FYI Win7 Tester",
                 "WebRTC Chromium FYI Win8 Tester",
                 "WebRTC Chromium FYI ios-device",
-                "WebRTC Chromium FYI ios-simulator",
+                # TODO: restore after https://crbug.com/1050976 will be fixed.
+                # "WebRTC Chromium FYI ios-simulator",
             ],
         },
     },
