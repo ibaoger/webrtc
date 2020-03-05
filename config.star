@@ -451,7 +451,7 @@ linux_builder, linux_try_job = normal_builder_factory(
 
 android_builder, android_try_job = normal_builder_factory(
     dimensions = {"os": "Linux"},
-    properties = GOMA_BACKEND_RBE_PROD,
+    properties = GOMA_BACKEND_NON_CHROMIUM_RBE_PROD,
 )
 
 win_builder, win_try_job = normal_builder_factory(
