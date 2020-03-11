@@ -9,14 +9,7 @@
 WEBRTC_GIT = "https://webrtc.googlesource.com/src"
 WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
 
-GOMA_BACKEND_RBE_PROD = {
-    "$build/goma": {
-        "server_host": "goma.chromium.org",
-        "rpc_extra_params": "?prod"
-    }
-}
-
-GOMA_BACKEND_NON_CHROMIUM_RBE_PROD = {
+GOMA_BACKEND_WEBRTC_RBE_PROD = {
     "$build/goma": {
         "server_host": "goma.chromium.org",
         "use_luci_auth": True
@@ -446,12 +439,12 @@ def normal_builder_factory(**common_kwargs):
 
 linux_builder, linux_try_job = normal_builder_factory(
     dimensions = {"os": "Linux", "inside_docker": "0"},
-    properties = GOMA_BACKEND_NON_CHROMIUM_RBE_PROD,
+    properties = GOMA_BACKEND_WEBRTC_RBE_PROD,
 )
 
 android_builder, android_try_job = normal_builder_factory(
     dimensions = {"os": "Linux"},
-    properties = GOMA_BACKEND_NON_CHROMIUM_RBE_PROD,
+    properties = GOMA_BACKEND_WEBRTC_RBE_PROD,
 )
 
 win_builder, win_try_job = normal_builder_factory(
@@ -461,7 +454,7 @@ win_builder, win_try_job = normal_builder_factory(
 
 mac_builder, mac_try_job = normal_builder_factory(
     dimensions = {"os": "Mac"},
-    properties = GOMA_BACKEND_NON_CHROMIUM_RBE_PROD,
+    properties = GOMA_BACKEND_WEBRTC_RBE_PROD,
 )
 
 ios_builder, ios_try_job = normal_builder_factory(
