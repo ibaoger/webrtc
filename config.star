@@ -16,6 +16,14 @@ GOMA_BACKEND_WEBRTC_RBE_PROD = {
     }
 }
 
+GOMA_BACKEND_WEBRTC_IOS_RBE_PROD = {
+    "$build/goma": {
+        "server_host": "goma.chromium.org",
+        "use_luci_auth": True
+    },
+    "$depot_tools/osx_sdk": {"sdk_version": "11c29"},
+}
+
 GOMA_BACKEND_RBE_ATS_PROD = {
     "$build/goma": {
         "server_host": "goma.chromium.org",
@@ -460,6 +468,17 @@ mac_builder, mac_try_job = normal_builder_factory(
 ios_builder, ios_try_job = normal_builder_factory(
     dimensions = {"os": "Mac-10.14"},
     recipe = "ios",
+    properties = GOMA_BACKEND_WEBRTC_IOS_RBE_PROD,
+    caches = [swarming.cache("osx_sdk")],
+)
+
+# Some iOS builders don't use goma because they build using
+# `use_xcode_clang=true` which is not supported by goma.
+# https://ci.chromium.org/p/webrtc/builders/ci/iOS%20API%20Framework%20Builder
+# https://ci.chromium.org/p/webrtc/builders/try/ios_api_framework
+ios_builder_no_goma, ios_try_job_no_goma = normal_builder_factory(
+    dimensions = {"os": "Mac-10.14"},
+    recipe = "ios",
     properties = {"$depot_tools/osx_sdk": {"sdk_version": "11c29"}},
     caches = [swarming.cache("osx_sdk")],
 )
@@ -508,8 +527,8 @@ ios_builder("iOS64 Sim Debug (iOS 11)", "iOS|x64|11")
 ios_try_job("ios_sim_x64_dbg_ios11")
 ios_builder("iOS64 Sim Debug (iOS 12)", "iOS|x64|12")
 ios_try_job("ios_sim_x64_dbg_ios12")
-ios_builder("iOS API Framework Builder", "iOS|fat|size", recipe = "ios_api_framework", prioritized = True)
-ios_try_job("ios_api_framework", recipe = "ios_api_framework", cq=None)
+ios_builder_no_goma("iOS API Framework Builder", "iOS|fat|size", recipe = "ios_api_framework", prioritized = True)
+ios_try_job_no_goma("ios_api_framework", recipe = "ios_api_framework", cq=None)
 
 linux_builder("Linux32 Debug", "Linux|x86|dbg")
 linux_try_job("linux_x86_dbg")
