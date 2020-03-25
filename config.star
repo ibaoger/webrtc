@@ -27,7 +27,7 @@ GOMA_BACKEND_WEBRTC_IOS_RBE_PROD = {
 GOMA_BACKEND_RBE_ATS_PROD = {
     "$build/goma": {
         "server_host": "goma.chromium.org",
-        "rpc_extra_params": "?prod",
+        "use_luci_auth": True,
         "enable_ats": True
     }
 }
