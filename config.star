@@ -397,6 +397,70 @@ def perf_builder(
         **kwargs
     )
 
+def android_perf_builder(
+        name,
+        perf_cat,
+        recipe = "standalone",
+        properties = {},
+        dimensions = {},
+        **kwargs):
+    return perf_builder(
+        name = name,
+        perf_cat = perf_cat,
+        recipe = recipe,
+        properties = merge_dicts(GOMA_BACKEND_WEBRTC_RBE_PROD, properties),
+        dimensions = dimensions,
+        **kwargs
+    )
+
+def linux_perf_builder(
+        name,
+        perf_cat,
+        recipe = "standalone",
+        properties = {},
+        dimensions = {},
+        **kwargs):
+    return perf_builder(
+        name = name,
+        perf_cat = perf_cat,
+        recipe = recipe,
+        properties = merge_dicts(GOMA_BACKEND_WEBRTC_RBE_PROD, properties),
+        dimensions = dimensions,
+        **kwargs
+    )
+
+def mac_perf_builder(
+        name,
+        perf_cat,
+        recipe = "standalone",
+        properties = {},
+        dimensions = {},
+        **kwargs):
+    return perf_builder(
+        name = name,
+        perf_cat = perf_cat,
+        recipe = recipe,
+        properties = merge_dicts(GOMA_BACKEND_WEBRTC_RBE_PROD, properties),
+        dimensions = dimensions,
+        **kwargs
+    )
+
+def win_perf_builder(
+        name,
+        perf_cat,
+        recipe = "standalone",
+        properties = {},
+        dimensions = {},
+        **kwargs):
+    return perf_builder(
+        name = name,
+        perf_cat = perf_cat,
+        recipe = recipe,
+        properties = merge_dicts(GOMA_BACKEND_RBE_ATS_PROD, properties),
+        dimensions = dimensions,
+        **kwargs
+    )
+
 def cron_builder(name, dimensions = {}, **kwargs):
     add_milo(name, {"cron": True})
     return webrtc_builder(
@@ -492,15 +556,15 @@ android_builder("Android32 (M Nexus5X)", "Android|arm|rel")
 android_try_job("android_arm_rel")
 android_builder("Android32 Builder arm", "Android|arm|size", perf_cat = "Android|arm|Builder|", prioritized = True)
 android_try_job("android_compile_arm_rel")
-perf_builder("Perf Android32 (K Nexus5)", "Android|arm|Tester|K Nexus5", triggered_by = ["Android32 Builder arm"])
-perf_builder("Perf Android32 (M AOSP Nexus6)", "Android|arm|Tester|M AOSP Nexus6", triggered_by = ["Android32 Builder arm"])
+android_perf_builder("Perf Android32 (K Nexus5)", "Android|arm|Tester|K Nexus5", triggered_by = ["Android32 Builder arm"])
+android_perf_builder("Perf Android32 (M AOSP Nexus6)", "Android|arm|Tester|M AOSP Nexus6", triggered_by = ["Android32 Builder arm"])
 android_try_job("android_compile_arm64_dbg", cq = None)
 android_try_job("android_arm64_dbg", cq = None)
 android_builder("Android64 (M Nexus5X)", "Android|arm64|rel")
 android_try_job("android_arm64_rel")
 android_builder("Android64 Builder arm64", "Android|arm64|size", perf_cat = "Android|arm64|Builder|", prioritized = True)
-perf_builder("Perf Android64 (M Nexus5X)", "Android|arm64|Tester|M Nexus5X", triggered_by = ["Android64 Builder arm64"])
-perf_builder("Perf Android64 (O Pixel2)", "Android|arm64|Tester|O Pixel2", triggered_by = ["Android64 Builder arm64"])
+android_perf_builder("Perf Android64 (M Nexus5X)", "Android|arm64|Tester|M Nexus5X", triggered_by = ["Android64 Builder arm64"])
+android_perf_builder("Perf Android64 (O Pixel2)", "Android|arm64|Tester|O Pixel2", triggered_by = ["Android64 Builder arm64"])
 android_try_job("android_compile_arm64_rel")
 android_builder("Android64 Builder x64 (dbg)", "Android|x64|dbg")
 android_try_job("android_compile_x64_dbg")
@@ -541,8 +605,8 @@ linux_builder("Linux64 Release", "Linux|x64|rel")
 linux_try_job("linux_rel")
 linux_builder("Linux64 Builder", "Linux|x64|size", perf_cat = "Linux|x64|Builder|", prioritized = True)
 linux_try_job("linux_compile_rel")
-perf_builder("Perf Linux Trusty", "Linux|x64|Tester|Trusty", triggered_by = ["Linux64 Builder"])
-perf_builder("Perf Linux Xenial", None, triggered_by = ["Linux64 Builder"])
+linux_perf_builder("Perf Linux Trusty", "Linux|x64|Tester|Trusty", triggered_by = ["Linux64 Builder"])
+linux_perf_builder("Perf Linux Xenial", None, triggered_by = ["Linux64 Builder"])
 linux_builder("Linux32 Debug (ARM)", "Linux|arm|dbg")
 linux_try_job("linux_compile_arm_dbg")
 linux_builder("Linux32 Release (ARM)", "Linux|arm|rel")
@@ -577,7 +641,7 @@ mac_builder("Mac64 Release", "Mac|x64|rel")
 mac_try_job("mac_rel")
 mac_try_job("mac_compile_rel", cq = None)
 mac_builder("Mac64 Builder", ci_cat = None, perf_cat = "Mac|x64|Builder|")
-perf_builder("Perf Mac 10.11", "Mac|x64|Tester|10.11", triggered_by = ["Mac64 Builder"])
+mac_perf_builder("Perf Mac 10.11", "Mac|x64|Tester|10.11", triggered_by = ["Mac64 Builder"])
 mac_builder("Mac Asan", "Mac|x64|asan")
 mac_try_job("mac_asan")
 mac_try_job("mac_chromium_compile", recipe = "chromium_trybot", dimensions = {"cores": "8"}, branch_cq = False)
@@ -601,7 +665,7 @@ win_builder("Win32 Release (Clang)", "Win Clang|x86|rel")
 win_try_job("win_x86_clang_rel")
 win_try_job("win_compile_x86_clang_rel", cq = None)
 win_builder("Win32 Builder (Clang)", ci_cat = None, perf_cat = "Win|x86|Builder|")
-perf_builder("Perf Win7", "Win|x86|Tester|7", triggered_by = ["Win32 Builder (Clang)"])
+win_perf_builder("Perf Win7", "Win|x86|Tester|7", triggered_by = ["Win32 Builder (Clang)"])
 win_builder("Win64 Debug (Clang)", "Win Clang|x64|dbg")
 win_try_job("win_x64_clang_dbg", cq = None)
 win_try_job("win_x64_clang_dbg_win8", cq = None)
