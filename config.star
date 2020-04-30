@@ -715,7 +715,7 @@ lkgr_config = {
                 "WebRTC Chromium FYI Android Builder (dbg)",
                 "WebRTC Chromium FYI Android Builder ARM64 (dbg)",
                 "WebRTC Chromium FYI Android Builder",
-                "WebRTC Chromium FYI Android Tests (dbg) (K Nexus5)",
+                "WebRTC Chromium FYI Android Tests (dbg) (L Nexus5)",
                 "WebRTC Chromium FYI Android Tests (dbg) (M Nexus5X)",
                 "WebRTC Chromium FYI Linux Builder (dbg)",
                 "WebRTC Chromium FYI Linux Builder",
