@@ -34,6 +34,9 @@ GOMA_BACKEND_RBE_ATS_PROD = {
 
 # Top-level configs:
 
+# Enable luci.tree_closer.
+lucicfg.enable_experiment("crbug.com/1054172")
+
 lucicfg.config(
     config_dir = ".",
     tracked_files = [
@@ -197,6 +200,34 @@ luci.notifier(
     ),
 )
 
+# Tree closer definitions:
+
+luci.tree_closer(
+    name = "webrtc_tree_closer",
+    tree_status_host = "webrtc-status.appspot.com",
+    template = luci.notifier_template(
+        name = "status",
+        body = io.read_file("luci-notify/email-templates/status.template"),
+    ),
+    # TODO: These step filters are copied verbatim from Gatekeeper, for testing
+    # that LUCI-Notify would take the exact same actions. Once we've switched
+    # over, this should be updated - several of these steps don't exist in
+    # WebRTC recipes.
+    failed_step_regexp = [
+        "bot_update",
+        "compile",
+        "gclient runhooks",
+        "runhooks",
+        "update",
+        "extract build",
+        "cleanup_temp",
+        "taskkill",
+        "compile",
+        "gn",
+    ],
+    failed_step_regexp_exclude = ".*\\(experimental\\).*",
+)
+
 # Recipe definitions:
 
 def recipe(recipe, pkg = "infra/recipe_bundles/chromium.googlesource.com/chromium/tools/build"):
@@ -323,7 +354,7 @@ def ci_builder(
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         triggered_by = ["webrtc-gitiles-trigger-master"] if enabled else None,
         repo = WEBRTC_GIT,
-        notifies = ["ci_notifier"] if enabled and (ci_cat or perf_cat) else None,
+        notifies = ["ci_notifier", "webrtc_tree_closer"] if enabled and (ci_cat or perf_cat) else None,
         **kwargs
     )
 
