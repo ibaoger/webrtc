@@ -6,6 +6,8 @@
 
 # https://chromium.googlesource.com/infra/luci/luci-go/+/master/lucicfg/doc/
 
+lucicfg.check_version('1.15.0')
+
 WEBRTC_GIT = "https://webrtc.googlesource.com/src"
 WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
 
