@@ -79,6 +79,8 @@ luci.milo(
     logo = "https://storage.googleapis.com/chrome-infra/webrtc-logo-vert-retro-255x305.png",
 )
 
+luci.notify(tree_closing_enabled = True)
+
 luci.cq(
     status_host = "chromium-cq-status.appspot.com",
     submit_max_burst = 1,
