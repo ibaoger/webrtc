@@ -6,7 +6,9 @@
 
 # https://chromium.googlesource.com/infra/luci/luci-go/+/master/lucicfg/doc/
 
-lucicfg.check_version('1.15.0')
+"""LUCI project configuration for WebRTC CQ and CI."""
+
+lucicfg.check_version("1.15.0")
 
 WEBRTC_GIT = "https://webrtc.googlesource.com/src"
 WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
@@ -14,14 +16,14 @@ WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
 GOMA_BACKEND_WEBRTC_RBE_PROD = {
     "$build/goma": {
         "server_host": "goma.chromium.org",
-        "use_luci_auth": True
-    }
+        "use_luci_auth": True,
+    },
 }
 
 GOMA_BACKEND_WEBRTC_IOS_RBE_PROD = {
     "$build/goma": {
         "server_host": "goma.chromium.org",
-        "use_luci_auth": True
+        "use_luci_auth": True,
     },
     "$depot_tools/osx_sdk": {"sdk_version": "11c29"},
 }
@@ -30,8 +32,8 @@ GOMA_BACKEND_RBE_ATS_PROD = {
     "$build/goma": {
         "server_host": "goma.chromium.org",
         "use_luci_auth": True,
-        "enable_ats": True
-    }
+        "enable_ats": True,
+    },
 }
 
 # Top-level configs:
@@ -51,6 +53,7 @@ lucicfg.config(
         "luci-scheduler.cfg",
         "project.cfg",
     ],
+    lint_checks = ["default"],
 )
 
 luci.project(
@@ -427,7 +430,7 @@ def perf_builder(
         # when there are P pending builds, LUCI will batch the first B builds.
         # P:  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 ...
         # B:  1  1  2  2  3  3  3  3  4  4  4  4  4  4  5 ...
-        triggering_policy = scheduler.logarithmic_batching(log_base = 17 / 10),
+        triggering_policy = scheduler.logarithmic_batching(log_base = 1.7),
         execution_timeout = 3 * time.hour,
         **kwargs
     )
@@ -627,7 +630,7 @@ ios_try_job("ios_sim_x64_dbg_ios11")
 ios_builder("iOS64 Sim Debug (iOS 12)", "iOS|x64|12")
 ios_try_job("ios_sim_x64_dbg_ios12")
 ios_builder_no_goma("iOS API Framework Builder", "iOS|fat|size", recipe = "ios_api_framework", prioritized = True)
-ios_try_job_no_goma("ios_api_framework", recipe = "ios_api_framework", cq=None)
+ios_try_job_no_goma("ios_api_framework", recipe = "ios_api_framework", cq = None)
 
 linux_builder("Linux32 Debug", "Linux|x86|dbg")
 linux_try_job("linux_x86_dbg")
