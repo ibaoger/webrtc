@@ -299,15 +299,20 @@ def webrtc_builder(
         name,
         recipe = "standalone",
         dimensions = {},
+        properties = {},
         priority = 30,
         execution_timeout = 2 * time.hour,
+        goma_jobs = 80,
         **kwargs):
     dimensions = merge_dicts({"cpu": "x86-64"}, dimensions)
+
+    goma_additional_params = {"$build/goma": {"jobs": goma_jobs}}
 
     return luci.builder(
         name = name,
         executable = recipe,
         dimensions = {k: v for k, v in dimensions.items() if v != None},
+        properties = merge_dicts(properties, goma_additional_params),
         execution_timeout = execution_timeout,
         priority = priority,
         build_numbers = True,
@@ -718,8 +723,8 @@ win_builder("Win64 UWP", ci_cat = None, fyi_cat = "")
 win_try_job("win_x64_uwp", cq = None, try_cat = None, fyi_cat = "")
 win_builder("Win (more configs)", "Win Clang|x86|more", recipe = "more_configs")
 win_try_job("win_x86_more_configs", recipe = "more_configs")
-win_try_job("win_chromium_compile", recipe = "chromium_trybot", branch_cq = False)
-win_try_job("win_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False)
+win_try_job("win_chromium_compile", recipe = "chromium_trybot", branch_cq = False, goma_jobs = 150)
+win_try_job("win_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False, goma_jobs = 150)
 
 linux_try_job(
     "presubmit",
