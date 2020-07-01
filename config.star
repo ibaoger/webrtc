@@ -302,17 +302,37 @@ def webrtc_builder(
         properties = {},
         priority = 30,
         execution_timeout = 2 * time.hour,
-        goma_jobs = 80,
+        goma_jobs = None,
         **kwargs):
+    """WebRTC specific wrapper around luci.builder.
+
+    Args:
+      name: builder name (str).
+      recipe: string with the name of the recipe to run.
+      dimensions: dict of Swarming dimensions (strings) to search machines by.
+      properties: dict of properties to pass to the recipe (on top of the default ones).
+      priority: int [1-255] or None, indicating swarming task priority, lower is
+        more important. If None, defer the decision to Buildbucket service.
+      execution_timeout: int or None, how long to wait for a running build to finish before
+        forcefully aborting it and marking the build as timed out. If None,
+        defer the decision to Buildbucket service.
+      goma_jobs: int or None, number of jobs to be used by the builder. If None, defer the
+        decition to the goma module.
+      **kwargs: Pass on to webrtc_builder / luci.builder.
+    Returns:
+      A luci.builder.
+    """
     dimensions = merge_dicts({"cpu": "x86-64"}, dimensions)
 
-    goma_additional_params = {"$build/goma": {"jobs": goma_jobs}}
+    if goma_jobs != None:
+        goma_additional_params = {"$build/goma": {"jobs": goma_jobs}}
+        properties = merge_dicts(properties, goma_additional_params)
 
     return luci.builder(
         name = name,
         executable = recipe,
         dimensions = {k: v for k, v in dimensions.items() if v != None},
-        properties = merge_dicts(properties, goma_additional_params),
+        properties = properties,
         execution_timeout = execution_timeout,
         priority = priority,
         build_numbers = True,
