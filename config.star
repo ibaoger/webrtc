@@ -122,6 +122,10 @@ luci.bucket(
 luci.bucket(
     name = "perf",
     acls = [
+        acl.entry(acl.BUILDBUCKET_TRIGGERER, groups = [
+            # Allow Pinpoint to trigger builds for bisection
+            "service-account-chromeperf",
+        ]),
         acl.entry(acl.BUILDBUCKET_TRIGGERER, users = [
             "luci-scheduler@appspot.gserviceaccount.com",
             "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
