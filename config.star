@@ -193,7 +193,7 @@ luci.cq_tryjob_verifier(
 
 luci.notifier(
     name = "ci_notifier",
-    on_failure = True,
+    on_new_status = ["FAILURE", "INFRA_FAILURE"],
     notify_emails = ["webrtc-sheriffs-robots@google.com"],
     template = luci.notifier_template(
         name = "ci",
@@ -203,11 +203,31 @@ luci.notifier(
 
 luci.notifier(
     name = "cron_notifier",
-    on_failure = True,
+    on_new_status = ["FAILURE", "INFRA_FAILURE"],
     notify_emails = ["webrtc-troopers-robots@google.com"],
     template = luci.notifier_template(
         name = "cron",
         body = io.read_file("luci-notify/email-templates/cron.template"),
+    ),
+)
+
+luci.notifier(
+    name = "try_notifier",
+    on_new_status = ["INFRA_FAILURE"],
+    notify_emails = ["webrtc-troopers-robots@google.com"],
+    template = luci.notifier_template(
+        name = "try",
+        body = io.read_file("luci-notify/email-templates/try.template"),
+    ),
+)
+
+luci.notifier(
+    name = "perf_notifier",
+    on_new_status = ["INFRA_FAILURE"],
+    notify_emails = ["webrtc-troopers-robots@google.com"],
+    template = luci.notifier_template(
+        name = "perf",
+        body = io.read_file("luci-notify/email-templates/perf.template"),
     ),
 )
 
@@ -437,6 +457,7 @@ def try_builder(
         dimensions = merge_dicts({"pool": "luci.webrtc.try"}, dimensions),
         bucket = "try",
         service_account = "webrtc-try-builder@chops-service-accounts.iam.gserviceaccount.com",
+        notifies = ["try_notifier"],
         **kwargs
     )
 
@@ -461,6 +482,7 @@ def perf_builder(
         # B:  1  1  2  2  3  3  3  3  4  4  4  4  4  4  5 ...
         triggering_policy = scheduler.logarithmic_batching(log_base = 1.7),
         execution_timeout = 3 * time.hour,
+        notifies = ["perf_notifier"],
         **kwargs
     )
 
