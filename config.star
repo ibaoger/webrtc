@@ -204,7 +204,7 @@ luci.notifier(
 luci.notifier(
     name = "cron_notifier",
     on_new_status = ["FAILURE", "INFRA_FAILURE"],
-    notify_emails = ["webrtc-trooper@grotations.appspotmail.com"],
+    notify_emails = ["webrtc-troopers-robots@google.com"],
     template = luci.notifier_template(
         name = "cron",
         body = io.read_file("luci-notify/email-templates/cron.template"),
@@ -214,7 +214,7 @@ luci.notifier(
 luci.notifier(
     name = "try_notifier",
     on_new_status = ["INFRA_FAILURE"],
-    notify_emails = ["webrtc-trooper@grotations.appspotmail.com"],
+    notify_emails = ["webrtc-troopers-robots@google.com"],
     template = luci.notifier_template(
         name = "try",
         body = io.read_file("luci-notify/email-templates/try.template"),
@@ -224,7 +224,7 @@ luci.notifier(
 luci.notifier(
     name = "perf_notifier",
     on_new_status = ["INFRA_FAILURE"],
-    notify_emails = ["webrtc-trooper@grotations.appspotmail.com"],
+    notify_emails = ["webrtc-troopers-robots@google.com"],
     template = luci.notifier_template(
         name = "perf",
         body = io.read_file("luci-notify/email-templates/perf.template"),
@@ -791,7 +791,7 @@ lkgr_config = {
     "status_url": "https://webrtc-status.appspot.com",
     "allowed_lag": 300,  # hours
     "allowed_gap": 12,  # commits behind
-    "error_recipients": "webrtc-trooper@grotations.appspotmail.com",
+    "error_recipients": "webrtc-troopers-robots@google.com",
     "buckets": {
         "webrtc/ci": {
             # bucket alias: luci.webrtc.ci
