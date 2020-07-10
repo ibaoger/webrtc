@@ -557,7 +557,6 @@ def cron_builder(name, dimensions = {}, **kwargs):
         dimensions = merge_dicts({"pool": "luci.webrtc.cron", "os": "Linux"}, dimensions),
         bucket = "cron",
         service_account = "chromium-webrtc-autoroll@webrtc-ci.iam.gserviceaccount.com",
-        repo = WEBRTC_GIT,
         notifies = ["cron_notifier"],
         **kwargs
     )
