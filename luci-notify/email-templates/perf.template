@@ -1,1 +1,0 @@
-{{ stepNames .MatchingFailedSteps }} on {{ buildUrl . }} {{ .Build.Builder.Builder }}{{ if .Build.Input.GitilesCommit }} from {{ .Build.Input.GitilesCommit.Id }}{{end}}

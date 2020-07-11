@@ -192,12 +192,12 @@ luci.cq_tryjob_verifier(
 # Notifier definitions:
 
 luci.notifier(
-    name = "ci_notifier",
-    on_new_status = ["FAILURE", "INFRA_FAILURE"],
+    name = "post_submit_failure_notifier",
+    on_new_status = ["FAILURE"],
     notify_emails = ["webrtc-sheriffs-robots@google.com"],
     template = luci.notifier_template(
-        name = "ci",
-        body = io.read_file("luci-notify/email-templates/ci.template"),
+        name = "build_failure",
+        body = io.read_file("luci-notify/email-templates/build_failure.template"),
     ),
 )
 
@@ -212,22 +212,12 @@ luci.notifier(
 )
 
 luci.notifier(
-    name = "try_notifier",
+    name = "infra_failure_notifier",
     on_new_status = ["INFRA_FAILURE"],
     notify_emails = ["webrtc-troopers-robots@google.com"],
     template = luci.notifier_template(
-        name = "try",
-        body = io.read_file("luci-notify/email-templates/try.template"),
-    ),
-)
-
-luci.notifier(
-    name = "perf_notifier",
-    on_new_status = ["INFRA_FAILURE"],
-    notify_emails = ["webrtc-troopers-robots@google.com"],
-    template = luci.notifier_template(
-        name = "perf",
-        body = io.read_file("luci-notify/email-templates/perf.template"),
+        name = "infra_failure",
+        body = io.read_file("luci-notify/email-templates/infra_failure.template"),
     ),
 )
 
@@ -236,10 +226,6 @@ luci.notifier(
 luci.tree_closer(
     name = "webrtc_tree_closer",
     tree_status_host = "webrtc-status.appspot.com",
-    template = luci.notifier_template(
-        name = "status",
-        body = io.read_file("luci-notify/email-templates/status.template"),
-    ),
     # TODO: These step filters are copied verbatim from Gatekeeper, for testing
     # that LUCI-Notify would take the exact same actions. Once we've switched
     # over, this should be updated - several of these steps don't exist in
@@ -410,7 +396,7 @@ def ci_builder(
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         triggered_by = ["webrtc-gitiles-trigger-master"] if enabled else None,
         repo = WEBRTC_GIT,
-        notifies = ["ci_notifier", "webrtc_tree_closer"] if enabled and (ci_cat or perf_cat) else None,
+        notifies = ["post_submit_failure_notifier", "webrtc_tree_closer", "infra_failure_notifier"] if enabled and (ci_cat or perf_cat) else None,
         **kwargs
     )
 
@@ -457,7 +443,7 @@ def try_builder(
         dimensions = merge_dicts({"pool": "luci.webrtc.try"}, dimensions),
         bucket = "try",
         service_account = "webrtc-try-builder@chops-service-accounts.iam.gserviceaccount.com",
-        notifies = ["try_notifier"],
+        notifies = ["infra_failure_notifier"],
         **kwargs
     )
 
@@ -482,7 +468,7 @@ def perf_builder(
         # B:  1  1  2  2  3  3  3  3  4  4  4  4  4  4  5 ...
         triggering_policy = scheduler.logarithmic_batching(log_base = 1.7),
         execution_timeout = 3 * time.hour,
-        notifies = ["perf_notifier"],
+        notifies = ["post_submit_failure_notifier", "infra_failure_notifier"],
         **kwargs
     )
 
