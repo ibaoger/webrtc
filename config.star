@@ -604,7 +604,7 @@ mac_builder, mac_try_job = normal_builder_factory(
 )
 
 ios_builder, ios_try_job = normal_builder_factory(
-    dimensions = {"os": "Mac-10.14"},
+    dimensions = {"os": "Mac-10.15"},
     recipe = "ios",
     properties = GOMA_BACKEND_WEBRTC_IOS_RBE_PROD,
     caches = [swarming.cache("osx_sdk")],
@@ -615,7 +615,7 @@ ios_builder, ios_try_job = normal_builder_factory(
 # https://ci.chromium.org/p/webrtc/builders/ci/iOS%20API%20Framework%20Builder
 # https://ci.chromium.org/p/webrtc/builders/try/ios_api_framework
 ios_builder_no_goma, ios_try_job_no_goma = normal_builder_factory(
-    dimensions = {"os": "Mac-10.14"},
+    dimensions = {"os": "Mac-10.15"},
     recipe = "ios",
     properties = {"$depot_tools/osx_sdk": {"sdk_version": "11c29"}},
     caches = [swarming.cache("osx_sdk")],
