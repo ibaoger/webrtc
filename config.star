@@ -390,7 +390,7 @@ def ci_builder(
             lkgr_builders[name] = True
     return webrtc_builder(
         name = name,
-        properties = merge_dicts({"mastername": "client.webrtc"}, properties),
+        properties = merge_dicts({"builder_group": "client.webrtc"}, properties),
         dimensions = merge_dicts({"pool": "luci.webrtc.ci"}, dimensions),
         bucket = "ci",
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
@@ -439,7 +439,7 @@ def try_builder(
 
     return webrtc_builder(
         name = name,
-        properties = merge_dicts({"mastername": "tryserver.webrtc"}, properties),
+        properties = merge_dicts({"builder_group": "tryserver.webrtc"}, properties),
         dimensions = merge_dicts({"pool": "luci.webrtc.try"}, dimensions),
         bucket = "try",
         service_account = "webrtc-try-builder@chops-service-accounts.iam.gserviceaccount.com",
@@ -458,7 +458,7 @@ def perf_builder(
     return webrtc_builder(
         name = name,
         recipe = recipe,
-        properties = merge_dicts({"mastername": "client.webrtc.perf"}, properties),
+        properties = merge_dicts({"builder_group": "client.webrtc.perf"}, properties),
         dimensions = merge_dicts({"pool": "luci.webrtc.perf", "os": "Linux", "cpu": None}, dimensions),
         bucket = "perf",
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
