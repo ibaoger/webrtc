@@ -771,6 +771,9 @@ cron_builder(
     schedule = "0 */2 * * *",  # Every 2 hours.
 )
 
+# TODO(bugs.webrtc.org/12025): Remove this.
+tmp_lkgr_builders = [builder for builder in lkgr_builders if builder != "Android64 Builder arm64"]
+
 lkgr_config = {
     "project": "webrtc",
     "source_url": WEBRTC_GIT,
@@ -781,7 +784,7 @@ lkgr_config = {
     "buckets": {
         "webrtc/ci": {
             # bucket alias: luci.webrtc.ci
-            "builders": sorted(lkgr_builders),
+            "builders": sorted(tmp_lkgr_builders),
         },
         "chromium/webrtc.fyi": {
             # bucket alias: luci.chromium.webrtc.fyi
