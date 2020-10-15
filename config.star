@@ -337,7 +337,11 @@ def webrtc_builder(
     if goma_jobs != None:
         goma_additional_params = {"$build/goma": {"jobs": goma_jobs}}
         properties = merge_dicts(properties, goma_additional_params)
-
+    properties = merge_dicts(properties, {
+        "$recipe_engine/isolated": {
+            "server": "https://isolateserver.appspot.com",
+        },
+    })
     return luci.builder(
         name = name,
         executable = recipe,
