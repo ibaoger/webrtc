@@ -25,7 +25,7 @@ GOMA_BACKEND_WEBRTC_IOS_RBE_PROD = {
         "server_host": "goma.chromium.org",
         "use_luci_auth": True,
     },
-    "$depot_tools/osx_sdk": {"sdk_version": "11c29"},
+    "$depot_tools/osx_sdk": {"sdk_version": "12a7209"},
 }
 
 GOMA_BACKEND_RBE_ATS_PROD = {
@@ -621,7 +621,7 @@ ios_builder, ios_try_job = normal_builder_factory(
 ios_builder_no_goma, ios_try_job_no_goma = normal_builder_factory(
     dimensions = {"os": "Mac-10.15"},
     recipe = "ios",
-    properties = {"$depot_tools/osx_sdk": {"sdk_version": "11c29"}},
+    properties = {"$depot_tools/osx_sdk": {"sdk_version": "12a7209"}},
     caches = [swarming.cache("osx_sdk")],
 )
 
@@ -663,10 +663,11 @@ ios_builder("iOS64 Debug", "iOS|arm64|dbg")
 ios_try_job("ios_compile_arm64_dbg")
 ios_builder("iOS64 Release", "iOS|arm64|rel")
 ios_try_job("ios_compile_arm64_rel")
-ios_builder("iOS64 Sim Debug (iOS 10.0)", "iOS|x64|10")
-ios_try_job("ios_sim_x64_dbg_ios10")
-ios_builder("iOS64 Sim Debug (iOS 11)", "iOS|x64|11")
-ios_try_job("ios_sim_x64_dbg_ios11")
+
+ios_builder("iOS64 Sim Debug (iOS 14.0)", "iOS|x64|14")
+ios_try_job("ios_sim_x64_dbg_ios14")
+ios_builder("iOS64 Sim Debug (iOS 13)", "iOS|x64|13")
+ios_try_job("ios_sim_x64_dbg_ios13")
 ios_builder("iOS64 Sim Debug (iOS 12)", "iOS|x64|12")
 ios_try_job("ios_sim_x64_dbg_ios12")
 ios_builder_no_goma("iOS API Framework Builder", "iOS|fat|size", recipe = "ios_api_framework", prioritized = True)
