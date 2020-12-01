@@ -664,11 +664,11 @@ ios_try_job("ios_compile_arm64_dbg")
 ios_builder("iOS64 Release", "iOS|arm64|rel")
 ios_try_job("ios_compile_arm64_rel")
 ios_builder("iOS64 Sim Debug (iOS 14.0)", "iOS|x64|14")
-ios_try_job("ios_sim_x64_dbg_ios14", cq = None)
+ios_try_job("ios_sim_x64_dbg_ios14")
 ios_builder("iOS64 Sim Debug (iOS 13)", "iOS|x64|13")
 ios_try_job("ios_sim_x64_dbg_ios13", cq = None)
 ios_builder("iOS64 Sim Debug (iOS 12)", "iOS|x64|12")
-ios_try_job("ios_sim_x64_dbg_ios12", cq = None)
+ios_try_job("ios_sim_x64_dbg_ios12")
 ios_builder_no_goma("iOS API Framework Builder", "iOS|fat|size", recipe = "ios_api_framework", prioritized = True)
 ios_try_job_no_goma("ios_api_framework", recipe = "ios_api_framework", cq = None)
 
@@ -775,13 +775,6 @@ cron_builder(
     schedule = "0 */2 * * *",  # Every 2 hours.
 )
 
-# TODO(bugs.webrtc.org/12134): Re-Enable
-skipped_lkgr_bots = [
-    "iOS64 Sim Debug (iOS 14.0)",
-    "iOS64 Sim Debug (iOS 13)",
-    "iOS64 Sim Debug (iOS 12)",
-]
-
 lkgr_config = {
     "project": "webrtc",
     "source_url": WEBRTC_GIT,
@@ -792,11 +785,7 @@ lkgr_config = {
     "buckets": {
         "webrtc/ci": {
             # bucket alias: luci.webrtc.ci
-            "builders": [
-                b
-                for b in sorted(lkgr_builders)
-                if b not in skipped_lkgr_bots
-            ],
+            "builders": sorted(lkgr_builders),
         },
         "chromium/webrtc.fyi": {
             # bucket alias: luci.chromium.webrtc.fyi
