@@ -263,6 +263,7 @@ recipe("webrtc/ios_api_framework")
 recipe("webrtc/libfuzzer")
 recipe("webrtc/more_configs")
 recipe("webrtc/standalone")
+recipe("webrtc/update_webrtc_binary_version")
 recipe("lkgr_finder", pkg = "infra/recipe_bundles/chromium.googlesource.com/infra/infra")
 
 # Console definitions:
@@ -540,13 +541,15 @@ def win_perf_builder(
         **kwargs
     )
 
-def cron_builder(name, dimensions = {}, **kwargs):
+def cron_builder(name, dimensions = {}, service_account = None, **kwargs):
+    if service_account == None:
+        service_account = "chromium-webrtc-autoroll@webrtc-ci.iam.gserviceaccount.com"
     add_milo(name, {"cron": True})
     return webrtc_builder(
         name = name,
         dimensions = merge_dicts({"pool": "luci.webrtc.cron", "os": "Linux"}, dimensions),
         bucket = "cron",
-        service_account = "chromium-webrtc-autoroll@webrtc-ci.iam.gserviceaccount.com",
+        service_account = service_account,
         notifies = ["cron_notifier"],
         **kwargs
     )
@@ -773,6 +776,13 @@ cron_builder(
     "Auto-roll - WebRTC DEPS",
     recipe = "auto_roll_webrtc_deps",
     schedule = "0 */2 * * *",  # Every 2 hours.
+)
+
+cron_builder(
+    "WebRTC version update",
+    recipe = "update_webrtc_binary_version",
+    schedule = "0 4 * * *",  # Every day at 4am.
+    service_account = "webrtc-version-updater@webrtc-ci.iam.gserviceaccount.com",
 )
 
 lkgr_config = {
