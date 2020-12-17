@@ -264,7 +264,7 @@ recipe("webrtc/libfuzzer")
 recipe("webrtc/more_configs")
 recipe("webrtc/standalone")
 recipe("webrtc/update_webrtc_binary_version")
-recipe("lkgr_finder", pkg = "infra/recipe_bundles/chromium.googlesource.com/infra/infra")
+recipe("lkgr_finder", pkg = "infra/recipe_bundles/chromium.googlesource.com/chromium/tools/build")
 
 # Console definitions:
 
