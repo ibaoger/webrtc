@@ -36,6 +36,15 @@ GOMA_BACKEND_RBE_ATS_PROD = {
     },
 }
 
+# Disable ATS on CQ/try.
+GOMA_BACKEND_RBE_NO_ATS_PROD = {
+    "$build/goma": {
+        "server_host": "goma.chromium.org",
+        "use_luci_auth": True,
+        "enable_ats": False,
+    },
+}
+
 # Top-level configs:
 
 # Enable luci.tree_closer.
@@ -600,10 +609,23 @@ android_builder, android_try_job = normal_builder_factory(
     properties = GOMA_BACKEND_WEBRTC_RBE_PROD,
 )
 
-win_builder, win_try_job = normal_builder_factory(
-    dimensions = {"os": "Windows"},
-    properties = GOMA_BACKEND_RBE_ATS_PROD,
-)
+def win_builder(*args, **kwargs):
+    return ci_builder(
+        *args,
+        **merge_dicts({
+            "dimensions": {"os": "Windows"},
+            "properties": GOMA_BACKEND_RBE_ATS_PROD,
+        }, kwargs)
+    )
+
+def win_try_job(*args, **kwargs):
+    return try_builder(
+        *args,
+        **merge_dicts({
+            "dimensions": {"os": "Windows"},
+            "properties": GOMA_BACKEND_RBE_NO_ATS_PROD,
+        }, kwargs)
+    )
 
 mac_builder, mac_try_job = normal_builder_factory(
     dimensions = {"os": "Mac"},
