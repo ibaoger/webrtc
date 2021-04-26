@@ -8,7 +8,7 @@
 
 """LUCI project configuration for WebRTC CQ and CI."""
 
-lucicfg.check_version("1.15.0")
+lucicfg.check_version("1.23.0")
 
 WEBRTC_GIT = "https://webrtc.googlesource.com/src"
 WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
@@ -47,6 +47,9 @@ GOMA_BACKEND_RBE_NO_ATS_PROD = {
 
 # Top-level configs:
 
+# Enable LUCI Realms support.
+lucicfg.enable_experiment("crbug.com/1085650")
+
 lucicfg.config(
     config_dir = ".",
     tracked_files = [
@@ -58,6 +61,7 @@ lucicfg.config(
         "luci-notify/**/*",
         "luci-scheduler.cfg",
         "project.cfg",
+        "realms.cfg",
     ],
     lint_checks = ["default"],
 )
@@ -77,6 +81,16 @@ luci.project(
         ),
         acl.entry(acl.LOGDOG_WRITER, groups = ["luci-logdog-chromium-writers"]),
         acl.entry(acl.SCHEDULER_OWNER, groups = ["project-webrtc-admins"]),
+    ],
+    bindings = [
+        luci.binding(
+            roles = "role/swarming.poolOwner",
+            groups = "project-webrtc-admins",
+        ),
+        luci.binding(
+            roles = "role/swarming.poolViewer",
+            groups = "all",
+        ),
     ],
 )
 
@@ -100,6 +114,38 @@ luci.gitiles_poller(
     name = "webrtc-gitiles-trigger-master",
     bucket = "ci",
     repo = WEBRTC_GIT,
+)
+
+# Swarming permissions:
+
+# Declare pool realms with default ACLs, effectively defaulting to @root realm.
+luci.realm(name = "pools/ci")
+luci.realm(name = "pools/try")
+luci.realm(name = "pools/perf")
+luci.realm(name = "pools/cron")
+
+# Allow admins to use LED & Swarming "Debug" feature on all WebRTC bots.
+luci.binding(
+    realm = "@root",
+    roles = "role/swarming.poolUser",
+    groups = "project-webrtc-admins",
+)
+luci.binding(
+    realm = "@root",
+    roles = "role/swarming.taskTriggerer",
+    groups = "project-webrtc-admins",
+)
+
+# Allow to use LED & Swarming "Debug" feature to a larger group but only on try bots / builders.
+luci.binding(
+    realm = "pools/try",
+    roles = "role/swarming.poolUser",
+    groups = "project-webrtc-led-users",
+)
+luci.binding(
+    realm = "try",
+    roles = "role/swarming.taskTriggerer",
+    groups = "project-webrtc-led-users",
 )
 
 # Bucket definitions:
