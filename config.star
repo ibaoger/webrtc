@@ -47,9 +47,6 @@ GOMA_BACKEND_RBE_NO_ATS_PROD = {
 
 # Top-level configs:
 
-# Enable luci.tree_closer.
-lucicfg.enable_experiment("crbug.com/1054172")
-
 lucicfg.config(
     config_dir = ".",
     tracked_files = [
