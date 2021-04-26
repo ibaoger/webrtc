@@ -122,8 +122,6 @@ luci.bucket(
     acls = [
         acl.entry(acl.BUILDBUCKET_TRIGGERER, groups = [
             "project-webrtc-ci-schedulers",
-        ], users = [
-            "luci-scheduler@appspot.gserviceaccount.com",
         ]),
         acl.entry(acl.BUILDBUCKET_TRIGGERER, groups = [
             # Allow Pinpoint to trigger builds for bisection
@@ -136,7 +134,6 @@ luci.bucket(
     name = "perf",
     acls = [
         acl.entry(acl.BUILDBUCKET_TRIGGERER, users = [
-            "luci-scheduler@appspot.gserviceaccount.com",
             "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         ]),
     ],
@@ -144,11 +141,6 @@ luci.bucket(
 
 luci.bucket(
     name = "cron",
-    acls = [
-        acl.entry(acl.BUILDBUCKET_TRIGGERER, users = [
-            "luci-scheduler@appspot.gserviceaccount.com",
-        ]),
-    ],
 )
 
 # Commit queue definitions:
