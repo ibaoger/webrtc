@@ -118,11 +118,41 @@ luci.gitiles_poller(
 
 # Swarming permissions:
 
-# Declare pool realms with default ACLs, effectively defaulting to @root realm.
+luci.realm(name = "pools/cron", bindings = [
+    # Unlike WebRTC's own builders, other projects need an explicit grant to use this pool.
+    luci.binding(
+        roles = "role/swarming.poolUser",
+        projects = "libyuv",
+    ),
+])
+
 luci.realm(name = "pools/ci")
+luci.realm(name = "pools/ci-tests", bindings = [
+    # Allow task service accounts of .ci pool/bucket to trigger tasks here.
+    luci.binding(
+        roles = "role/swarming.poolUser",
+        groups = "project-webrtc-ci-task-accounts",
+    ),
+    # Allow tasks here to use .ci task service accounts.
+    luci.binding(
+        roles = "role/swarming.taskServiceAccount",
+        groups = "project-webrtc-ci-task-accounts",
+    ),
+])
+
 luci.realm(name = "pools/try")
-luci.realm(name = "pools/perf")
-luci.realm(name = "pools/cron")
+luci.realm(name = "pools/try-tests", bindings = [
+    # Allow task service accounts of .try pool/bucket to trigger tasks here.
+    luci.binding(
+        roles = "role/swarming.poolUser",
+        groups = "project-webrtc-try-task-accounts",
+    ),
+    # Allow tasks here to use .try task service accounts.
+    luci.binding(
+        roles = "role/swarming.taskServiceAccount",
+        groups = "project-webrtc-try-task-accounts",
+    ),
+])
 
 # Allow admins to use LED & Swarming "Debug" feature on all WebRTC bots.
 luci.binding(
