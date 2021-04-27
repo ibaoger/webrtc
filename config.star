@@ -776,16 +776,12 @@ mac_builder("Mac64 Debug", "Mac|x64|dbg")
 mac_try_job("mac_dbg", cq = None)
 mac_try_job("mac_compile_dbg")
 mac_builder("Mac64 Release", "Mac|x64|rel")
-
-# TODO(crbug.com/1203214): return to cq.
-mac_try_job("mac_rel", cq = None)
+mac_try_job("mac_rel")
 mac_try_job("mac_compile_rel", cq = None)
 mac_builder("Mac64 Builder", ci_cat = None, perf_cat = "Mac|x64|Builder|")
 mac_perf_builder("Perf Mac 10.11", "Mac|x64|Tester|10.11", triggered_by = ["Mac64 Builder"])
 mac_builder("Mac Asan", "Mac|x64|asan")
-
-# TODO(crbug.com/1203214): return to cq.
-mac_try_job("mac_asan", cq = None)
+mac_try_job("mac_asan")
 mac_try_job("mac_chromium_compile", recipe = "chromium_trybot", dimensions = {"cores": "8"}, branch_cq = False)
 
 win_builder("Win32 Debug", "Win MSVC|x86|dbg")
