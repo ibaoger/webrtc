@@ -12,6 +12,7 @@ lucicfg.check_version("1.23.0")
 
 WEBRTC_GIT = "https://webrtc.googlesource.com/src"
 WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
+WEBRTC_TROOPER_EMAIL = "webrtc-troopers-robots@google.com"
 
 GOMA_BACKEND_WEBRTC_RBE_PROD = {
     "$build/goma": {
@@ -279,7 +280,7 @@ luci.cq_tryjob_verifier(
 luci.notifier(
     name = "post_submit_failure_notifier",
     on_new_status = ["FAILURE"],
-    notify_emails = ["webrtc-sheriffs-robots@google.com"],
+    notify_emails = [WEBRTC_TROOPER_EMAIL],
     template = luci.notifier_template(
         name = "build_failure",
         body = io.read_file("luci-notify/email-templates/build_failure.template"),
@@ -289,7 +290,7 @@ luci.notifier(
 luci.notifier(
     name = "cron_notifier",
     on_new_status = ["FAILURE", "INFRA_FAILURE"],
-    notify_emails = ["webrtc-troopers-robots@google.com"],
+    notify_emails = [WEBRTC_TROOPER_EMAIL],
     template = luci.notifier_template(
         name = "cron",
         body = io.read_file("luci-notify/email-templates/cron.template"),
@@ -299,7 +300,7 @@ luci.notifier(
 luci.notifier(
     name = "infra_failure_notifier",
     on_new_status = ["INFRA_FAILURE"],
-    notify_emails = ["webrtc-troopers-robots@google.com"],
+    notify_emails = [WEBRTC_TROOPER_EMAIL],
     template = luci.notifier_template(
         name = "infra_failure",
         body = io.read_file("luci-notify/email-templates/infra_failure.template"),
@@ -895,7 +896,7 @@ lkgr_config = {
     "status_url": "https://webrtc-status.appspot.com",
     "allowed_lag": 300,  # hours
     "allowed_gap": 12,  # commits behind
-    "error_recipients": "webrtc-troopers-robots@google.com",
+    "error_recipients": WEBRTC_TROOPER_EMAIL,
     "buckets": {
         "webrtc/ci": {
             # bucket alias: luci.webrtc.ci
