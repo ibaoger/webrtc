@@ -357,7 +357,6 @@ recipe("lkgr_finder", pkg = "infra/recipe_bundles/chromium.googlesource.com/chro
 luci.console_view(name = "ci", title = "Main", repo = WEBRTC_GIT, header = "console-header.textpb")
 luci.console_view(name = "perf", title = "Perf", repo = WEBRTC_GIT, header = "console-header.textpb")
 luci.list_view(name = "cron", title = "Cron")
-luci.console_view(name = "fyi", title = "FYI", repo = WEBRTC_GIT, header = "console-header.textpb")
 luci.list_view(name = "try", title = "Tryserver")
 
 def add_milo(builder, views):
