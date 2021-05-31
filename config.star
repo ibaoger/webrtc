@@ -233,7 +233,7 @@ luci.bucket(
 luci.cq_group(
     name = "cq",
     tree_status_host = "webrtc-status.appspot.com",
-    watch = [cq.refset(repo = WEBRTC_GERRIT, refs = ["refs/heads/master"])],
+    watch = [cq.refset(repo = WEBRTC_GERRIT, refs = ["refs/heads/master", "refs/heads/main"])],
     acls = [
         acl.entry(acl.CQ_COMMITTER, groups = ["project-webrtc-committers"]),
         acl.entry(acl.CQ_DRY_RUNNER, groups = ["project-webrtc-tryjob-access"]),
