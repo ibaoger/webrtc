@@ -765,13 +765,11 @@ ios_try_job("ios_compile_arm64_dbg")
 ios_builder("iOS64 Release", "iOS|arm64|rel")
 ios_try_job("ios_compile_arm64_rel")
 ios_builder("iOS64 Sim Debug (iOS 14.0)", "iOS|x64|14")
-ios_try_job("ios_sim_x64_dbg_ios14", cq = None)
+ios_try_job("ios_sim_x64_dbg_ios14")
 ios_builder("iOS64 Sim Debug (iOS 13)", "iOS|x64|13")
-ios_try_job("ios_sim_x64_dbg_ios13", cq = None)
+ios_try_job("ios_sim_x64_dbg_ios13")
 ios_builder("iOS64 Sim Debug (iOS 12)", "iOS|x64|12")
-
-# TODO(crbug.com/1174112): return ios_sim_x64_dbg_ios12 to cq.
-ios_try_job("ios_sim_x64_dbg_ios12", cq = None)
+ios_try_job("ios_sim_x64_dbg_ios12")
 ios_builder_no_goma("iOS API Framework Builder", "iOS|fat|size", recipe = "ios_api_framework", prioritized = True)
 ios_try_job_no_goma("ios_api_framework", recipe = "ios_api_framework", cq = None)
 
