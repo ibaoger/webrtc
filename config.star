@@ -822,6 +822,10 @@ mac_perf_builder("Perf Mac 10.11", "Mac|x64|Tester|10.11", triggered_by = ["Mac6
 mac_builder("Mac Asan", "Mac|x64|asan")
 mac_try_job("mac_asan")
 mac_try_job("mac_chromium_compile", recipe = "chromium_trybot", dimensions = {"cores": "8"}, branch_cq = False)
+mac_try_job("MacARM64 M1 Debug try", dimensions = {"cpu": "arm64-64-Apple_M1"})
+mac_try_job("MacARM64 M1 Release try", dimensions = {"cpu": "arm64-64-Apple_M1"})
+mac_builder("MacARM64 M1 Debug", "Mac|arm64M1|dbg", dimensions = {"cpu": "arm64-64-Apple_M1"})
+mac_builder("MacARM64 M1 Release", "Mac|arm64M1|rel", dimensions = {"cpu": "arm64-64-Apple_M1"})
 
 win_builder("Win32 Debug", "Win MSVC|x86|dbg")
 win_try_job("win_x86_msvc_dbg")
