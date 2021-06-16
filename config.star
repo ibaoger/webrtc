@@ -822,9 +822,6 @@ mac_perf_builder("Perf Mac 10.11", "Mac|x64|Tester|10.11", triggered_by = ["Mac6
 mac_builder("Mac Asan", "Mac|x64|asan")
 mac_try_job("mac_asan")
 mac_try_job("mac_chromium_compile", recipe = "chromium_trybot", dimensions = {"cores": "8"}, branch_cq = False)
-mac_try_job("MacARM64 M1 Debug try", dimensions = {"cpu": "arm64-64-Apple_M1"}, cq = None)
-mac_try_job("MacARM64 M1 Release try", dimensions = {"cpu": "arm64-64-Apple_M1"}, cq = None)
-mac_builder("MacARM64 M1 Debug", "Mac|arm64M1|dbg", dimensions = {"cpu": "arm64-64-Apple_M1"})
 mac_builder("MacARM64 M1 Release", "Mac|arm64M1|rel", dimensions = {"cpu": "arm64-64-Apple_M1"})
 
 win_builder("Win32 Debug", "Win MSVC|x86|dbg")
@@ -887,7 +884,6 @@ skipped_lkgr_bots = [
     "iOS64 Sim Debug (iOS 14.0)",
     "iOS64 Sim Debug (iOS 13)",
     "iOS64 Sim Debug (iOS 12)",
-    "MacARM64 M1 Debug",
     "MacARM64 M1 Release",
 ]
 
