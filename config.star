@@ -925,9 +925,7 @@ lkgr_config = {
                 # "WebRTC Chromium FYI Win7 Tester",
                 "WebRTC Chromium FYI Win8 Tester",
                 "WebRTC Chromium FYI ios-device",
-                # TODO(bugs.webrtc.org/12886): Re-enable when simulator os
-                # upgraded to 13.0 or higher.
-                # "WebRTC Chromium FYI ios-simulator",
+                "WebRTC Chromium FYI ios-simulator",
             ],
         },
     },
