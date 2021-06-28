@@ -355,8 +355,8 @@ recipe("lkgr_finder", pkg = "infra/recipe_bundles/chromium.googlesource.com/chro
 
 # Console definitions:
 
-luci.console_view(name = "ci", title = "Main", repo = WEBRTC_GIT, header = "console-header.textpb")
-luci.console_view(name = "perf", title = "Perf", repo = WEBRTC_GIT, header = "console-header.textpb")
+luci.console_view(name = "ci", title = "Main", repo = WEBRTC_GIT, header = "console-header.textpb", refs = ["refs/heads/master", "refs/heads/main"])
+luci.console_view(name = "perf", title = "Perf", repo = WEBRTC_GIT, header = "console-header.textpb", refs = ["refs/heads/master", "refs/heads/main"])
 luci.list_view(name = "cron", title = "Cron")
 luci.list_view(name = "try", title = "Tryserver")
 
