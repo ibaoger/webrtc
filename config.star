@@ -123,9 +123,10 @@ luci.cq(
 )
 
 luci.gitiles_poller(
-    name = "webrtc-gitiles-trigger-master",
+    name = "webrtc-gitiles-trigger-main",
     bucket = "ci",
     repo = WEBRTC_GIT,
+    refs = ["refs/heads/main"],
 )
 
 # Swarming permissions:
@@ -484,7 +485,7 @@ def ci_builder(
         dimensions = merge_dicts({"pool": "luci.webrtc.ci"}, dimensions),
         bucket = "ci",
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
-        triggered_by = ["webrtc-gitiles-trigger-master"] if enabled else None,
+        triggered_by = ["webrtc-gitiles-trigger-main"] if enabled else None,
         repo = WEBRTC_GIT,
         notifies = ["post_submit_failure_notifier", "webrtc_tree_closer", "infra_failure_notifier"] if enabled and (ci_cat or perf_cat) else None,
         **kwargs
