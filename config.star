@@ -939,6 +939,7 @@ cron_builder(
         "project": "webrtc",
         "repo": WEBRTC_GIT,
         "ref": "refs/heads/lkgr",
+        "src_ref": "refs/heads/main",
         "lkgr_status_gs_path": "chromium-webrtc/lkgr-status",
         "config": lkgr_config,
     },
