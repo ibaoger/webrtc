@@ -921,9 +921,7 @@ lkgr_config = {
                 "WebRTC Chromium FYI Win Builder (dbg)",
                 "WebRTC Chromium FYI Win Builder",
                 "WebRTC Chromium FYI Win10 Tester",
-                # TODO(bugs.webrtc.org/12616): Re-enable when the gclient
-                # runhooks step is fixed or skipped.
-                # "WebRTC Chromium FYI Win7 Tester",
+                "WebRTC Chromium FYI Win7 Tester",
                 "WebRTC Chromium FYI Win8 Tester",
                 "WebRTC Chromium FYI ios-device",
                 "WebRTC Chromium FYI ios-simulator",
