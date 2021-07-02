@@ -757,10 +757,6 @@ android_builder("Android32 (more configs)", "Android|arm|more", recipe = "more_c
 android_try_job("android_arm_more_configs", recipe = "more_configs")
 android_try_job("android_chromium_compile", recipe = "chromium_trybot", branch_cq = False)
 
-ios_builder("iOS32 Debug", "iOS|arm|dbg")
-ios_try_job("ios_compile_arm_dbg", cq = None)
-ios_builder("iOS32 Release", "iOS|arm|rel")
-ios_try_job("ios_compile_arm_rel", cq = None)
 ios_builder("iOS64 Debug", "iOS|arm64|dbg")
 ios_try_job("ios_compile_arm64_dbg")
 ios_builder("iOS64 Release", "iOS|arm64|rel")
