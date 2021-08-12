@@ -881,9 +881,6 @@ cron_builder(
 # useful when a failure can be safely ignored while fixing it without
 # blocking the LKGR finder on it.
 skipped_lkgr_bots = [
-    # TODO(landrey): return to lkgr after virtual camera issue is solved.
-    "Win32 Release",
-    "Win32 Release (Clang)",
 ]
 
 lkgr_config = {
