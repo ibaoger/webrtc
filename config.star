@@ -824,7 +824,9 @@ mac_builder("Mac64 Builder", ci_cat = None, perf_cat = "Mac|x64|Builder|")
 mac_perf_builder("Perf Mac 10.11", "Mac|x64|Tester|10.11", triggered_by = ["Mac64 Builder"])
 mac_builder("Mac Asan", "Mac|x64|asan")
 mac_try_job("mac_asan")
-mac_try_job("mac_chromium_compile", recipe = "chromium_trybot", dimensions = {"cores": "8"}, branch_cq = False)
+
+# TODO(crbug.com/1244375): Reenable mac_chromium_compile once the bot has been restarted.
+mac_try_job("mac_chromium_compile", recipe = "chromium_trybot", dimensions = {"cores": "8"}, cq = None, branch_cq = False)
 mac_builder("MacARM64 M1 Release", "Mac|arm64M1|rel", dimensions = {"cpu": "arm64-64-Apple_M1"})
 
 win_builder("Win32 Debug", "Win MSVC|x86|dbg")
