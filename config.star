@@ -167,6 +167,19 @@ luci.realm(name = "pools/try-tests", bindings = [
     ),
 ])
 
+# Allow to use LED & Swarming "Debug" feature to a larger group but only on perf bots / builders.
+luci.realm(name = "pools/perf", bindings = [
+    luci.binding(
+        roles = "role/swarming.poolUser",
+        groups = "project-webrtc-led-users",
+    ),
+])
+luci.binding(
+    realm = "perf",
+    roles = "role/swarming.taskTriggerer",
+    groups = "project-webrtc-led-users",
+)
+
 # Allow admins to use LED & Swarming "Debug" feature on all WebRTC bots.
 luci.binding(
     realm = "@root",
@@ -179,13 +192,7 @@ luci.binding(
     groups = "project-webrtc-admins",
 )
 
-# Allow to use LED & Swarming "Debug" feature to a larger group but only on perf
-# and try bots / builders.
-luci.binding(
-    realm = "perf",
-    roles = "role/swarming.poolUser",
-    groups = "project-webrtc-led-users",
-)
+# Allow to use LED & Swarming "Debug" feature to a larger group but only on try bots / builders.
 luci.binding(
     realm = "pools/try",
     roles = "role/swarming.poolUser",
