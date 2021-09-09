@@ -4,7 +4,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-# https://chromium.googlesource.com/infra/luci/luci-go/+/master/lucicfg/doc/
+# https://chromium.googlesource.com/infra/luci/luci-go/+/main/lucicfg/doc/
 
 """LUCI project configuration for WebRTC CQ and CI."""
 
@@ -351,7 +351,7 @@ def recipe(recipe, pkg = "infra/recipe_bundles/chromium.googlesource.com/chromiu
     return luci.recipe(
         name = recipe.split("/")[-1],
         cipd_package = pkg,
-        cipd_version = "refs/heads/master",
+        cipd_version = "refs/heads/main",
         recipe = recipe,
     )
 
