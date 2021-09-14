@@ -927,7 +927,8 @@ lkgr_config = {
                 "WebRTC Chromium FYI Mac Builder",
                 "WebRTC Chromium FYI Mac Tester",
                 "WebRTC Chromium FYI Win Builder (dbg)",
-                "WebRTC Chromium FYI Win Builder",
+                # TODO(b/199711408): restore after fixed.
+                # "WebRTC Chromium FYI Win Builder",
                 "WebRTC Chromium FYI Win10 Tester",
                 "WebRTC Chromium FYI Win7 Tester",
                 "WebRTC Chromium FYI Win8 Tester",
