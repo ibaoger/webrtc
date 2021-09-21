@@ -781,7 +781,7 @@ ios_try_job("ios_sim_x64_dbg_ios13")
 ios_builder("iOS64 Sim Debug (iOS 12)", "iOS|x64|12")
 ios_try_job("ios_sim_x64_dbg_ios12")
 ios_builder_no_goma("iOS API Framework Builder", "iOS|fat|size", recipe = "ios_api_framework", prioritized = True)
-ios_try_job_no_goma("ios_api_framework", recipe = "ios_api_framework", cq = None)
+ios_try_job_no_goma("ios_api_framework", recipe = "ios_api_framework")
 
 linux_builder("Linux32 Debug", "Linux|x86|dbg")
 linux_try_job("linux_x86_dbg")
