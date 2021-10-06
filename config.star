@@ -831,16 +831,16 @@ mac_try_job("mac_chromium_compile", recipe = "chromium_trybot", dimensions = {"c
 mac_builder("MacARM64 M1 Release", "Mac|arm64M1|rel", dimensions = {"cpu": "arm64-64-Apple_M1"})
 
 win_builder("Win32 Debug", "Win MSVC|x86|dbg")
-win_try_job("win_x86_msvc_dbg")
+win_try_job("win_x86_msvc_dbg", cq = None)
 win_try_job("win_compile_x86_msvc_dbg", cq = None)
 win_builder("Win32 Release", "Win MSVC|x86|rel")
-win_try_job("win_x86_msvc_rel")
+win_try_job("win_x86_msvc_rel", cq = None)
 win_try_job("win_compile_x86_msvc_rel", cq = None)
 win_builder("Win64 Debug", "Win MSVC|x64|dbg")
-win_try_job("win_x64_msvc_dbg")
+win_try_job("win_x64_msvc_dbg", cq = None)
 win_try_job("win_compile_x64_msvc_dbg", cq = None)
 win_builder("Win64 Release", "Win MSVC|x64|rel")
-win_try_job("win_x64_msvc_rel")
+win_try_job("win_x64_msvc_rel", cq = None)
 win_try_job("win_compile_x64_msvc_rel", cq = None)
 win_builder("Win32 Debug (Clang)", "Win Clang|x86|dbg")
 win_try_job("win_x86_clang_dbg", cq = None)
@@ -890,6 +890,11 @@ cron_builder(
 # useful when a failure can be safely ignored while fixing it without
 # blocking the LKGR finder on it.
 skipped_lkgr_bots = [
+    # The following 4 bots are excluded because they use MSVC
+    "Win32 Debug",
+    "Win32 Release",
+    "Win64 Debug",
+    "Win64 Release",
 ]
 
 lkgr_config = {
