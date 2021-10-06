@@ -890,7 +890,8 @@ cron_builder(
 # useful when a failure can be safely ignored while fixing it without
 # blocking the LKGR finder on it.
 skipped_lkgr_bots = [
-    # The following 4 bots are excluded because they use MSVC
+    # TODO(webrtc:13232): The following 4 bots are excluded because they
+    # use MSVC. Remove when the bug has been fixed.
     "Win32 Debug",
     "Win32 Release",
     "Win64 Debug",
