@@ -46,6 +46,18 @@ GOMA_BACKEND_RBE_NO_ATS_PROD = {
     },
 }
 
+# Add names of builders to remove from LKGR finder to this list. This is
+# useful when a failure can be safely ignored while fixing it without
+# blocking the LKGR finder on it.
+skipped_lkgr_bots = [
+    # TODO(webrtc:13232): The following 4 bots are excluded because they
+    # use MSVC. Remove when the bug has been fixed.
+    "Win32 Debug",
+    "Win32 Release",
+    "Win64 Debug",
+    "Win64 Release",
+]
+
 # Top-level configs:
 
 # Enable LUCI Realms support.
@@ -492,6 +504,9 @@ def ci_builder(
         add_milo(name, {"ci": ci_cat, "perf": perf_cat, "fyi": fyi_cat})
         if ci_cat:
             lkgr_builders[name] = True
+    notifies = ["post_submit_failure_notifier", "infra_failure_notifier"] if enabled and (ci_cat or perf_cat) else None
+    if notifies and name not in skipped_lkgr_bots:
+        notifies.append("webrtc_tree_closer")
     return webrtc_builder(
         name = name,
         properties = merge_dicts({"builder_group": "client.webrtc"}, properties),
@@ -500,7 +515,7 @@ def ci_builder(
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         triggered_by = ["webrtc-gitiles-trigger-main"] if enabled else None,
         repo = WEBRTC_GIT,
-        notifies = ["post_submit_failure_notifier", "webrtc_tree_closer", "infra_failure_notifier"] if enabled and (ci_cat or perf_cat) else None,
+        notifies = notifies,
         **kwargs
     )
 
@@ -885,18 +900,6 @@ cron_builder(
     schedule = "0 4 * * *",  # Every day at 4am.
     service_account = "webrtc-version-updater@webrtc-ci.iam.gserviceaccount.com",
 )
-
-# Add names of builders to remove from LKGR finder to this list. This is
-# useful when a failure can be safely ignored while fixing it without
-# blocking the LKGR finder on it.
-skipped_lkgr_bots = [
-    # TODO(webrtc:13232): The following 4 bots are excluded because they
-    # use MSVC. Remove when the bug has been fixed.
-    "Win32 Debug",
-    "Win32 Release",
-    "Win64 Debug",
-    "Win64 Release",
-]
 
 lkgr_config = {
     "project": "webrtc",
