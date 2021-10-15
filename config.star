@@ -833,7 +833,7 @@ linux_try_job("linux_chromium_compile", recipe = "chromium_trybot", branch_cq = 
 linux_try_job("linux_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False)
 
 mac_builder("Mac64 Debug", "Mac|x64|dbg")
-mac_try_job("mac_dbg")
+mac_try_job("mac_dbg", cq = None)
 mac_try_job("mac_compile_dbg")
 mac_builder("Mac64 Release", "Mac|x64|rel")
 mac_try_job("mac_rel")
