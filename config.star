@@ -833,14 +833,10 @@ linux_try_job("linux_chromium_compile", recipe = "chromium_trybot", branch_cq = 
 linux_try_job("linux_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False)
 
 mac_builder("Mac64 Debug", "Mac|x64|dbg")
-
-# TODO(bugs.webrtc.org/13275): Re-enable CQ.
-mac_try_job("mac_dbg", cq = None)
+mac_try_job("mac_dbg")
 mac_try_job("mac_compile_dbg")
 mac_builder("Mac64 Release", "Mac|x64|rel")
-
-# TODO(bugs.webrtc.org/13275): Re-enable CQ.
-mac_try_job("mac_rel", cq = None)
+mac_try_job("mac_rel")
 mac_try_job("mac_compile_rel", cq = None)
 mac_builder("Mac64 Builder", ci_cat = None, perf_cat = "Mac|x64|Builder|")
 mac_perf_builder("Perf Mac 10.11", "Mac|x64|Tester|10.11", triggered_by = ["Mac64 Builder"])
