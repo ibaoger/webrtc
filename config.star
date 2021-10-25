@@ -301,6 +301,7 @@ luci.notifier(
     name = "post_submit_failure_notifier",
     on_new_status = ["FAILURE"],
     notify_emails = [WEBRTC_TROOPER_EMAIL],
+    notify_blamelist = True,
     template = luci.notifier_template(
         name = "build_failure",
         body = io.read_file("luci-notify/email-templates/build_failure.template"),
@@ -580,6 +581,7 @@ def perf_builder(
         # P:  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 ...
         # B:  1  1  2  2  3  3  3  3  4  4  4  4  4  4  5 ...
         triggering_policy = scheduler.logarithmic_batching(log_base = 1.7),
+        repo = WEBRTC_GIT,
         execution_timeout = 3 * time.hour,
         notifies = ["post_submit_failure_notifier", "infra_failure_notifier"],
         **kwargs
