@@ -8,7 +8,7 @@
 
 """LUCI project configuration for WebRTC CQ and CI."""
 
-lucicfg.check_version("1.23.0")
+lucicfg.check_version("1.29.1")
 
 WEBRTC_GIT = "https://webrtc.googlesource.com/src"
 WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
