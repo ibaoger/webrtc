@@ -94,6 +94,12 @@ luci.project(
     ],
     bindings = [
         luci.binding(
+            roles = "role/configs.validator",
+            users = [
+                "webrtc-try-builder@chops-service-accounts.iam.gserviceaccount.com",
+            ],
+        ),
+        luci.binding(
             roles = "role/swarming.poolOwner",
             groups = "project-webrtc-admins",
         ),
