@@ -458,6 +458,7 @@ def webrtc_builder(
         priority = priority,
         build_numbers = True,
         swarming_tags = ["vpython:native-python-wrapper"],
+        resultdb_settings = resultdb.settings(enable = True),
         **kwargs
     )
 
