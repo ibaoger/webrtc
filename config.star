@@ -58,7 +58,12 @@ skipped_lkgr_bots = [
 lucicfg.enable_experiment("crbug.com/1085650")
 
 # Launch all builds in "realms-aware mode", crbug.com/1177975.
-luci.builder.defaults.experiments.set({"luci.use_realms": 100})
+luci.builder.defaults.experiments.set(
+    {
+        "luci.use_realms": 100,
+        "luci.recipes.use_python3": 100,
+    },
+)
 
 lucicfg.config(
     config_dir = ".",
