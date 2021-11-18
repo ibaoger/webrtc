@@ -371,6 +371,7 @@ def recipe(recipe, pkg = "infra/recipe_bundles/chromium.googlesource.com/chromiu
         cipd_package = pkg,
         cipd_version = "refs/heads/main",
         recipe = recipe,
+        use_python3 = True,
     )
 
 recipe("chromium_trybot")
