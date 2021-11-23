@@ -64,6 +64,9 @@ luci.builder.defaults.experiments.set(
         "luci.recipes.use_python3": 100,
     },
 )
+luci.builder.defaults.test_presentation.set(
+    resultdb.test_presentation(grouping_keys = ["status", "v.test_suite"]),
+)
 
 lucicfg.config(
     config_dir = ".",
