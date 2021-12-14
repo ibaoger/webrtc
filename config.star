@@ -52,11 +52,6 @@ GOMA_BACKEND_RBE_NO_ATS_PROD = {
 skipped_lkgr_bots = [
 ]
 
-# Top-level configs:
-
-# Enable LUCI Realms support.
-lucicfg.enable_experiment("crbug.com/1085650")
-
 # Launch all builds in "realms-aware mode", crbug.com/1177975.
 luci.builder.defaults.experiments.set(
     {
@@ -442,6 +437,7 @@ lkgr_builders = {}
 
 def webrtc_builder(
         name,
+        bucket,
         recipe = "standalone",
         dimensions = {},
         properties = {},
@@ -453,6 +449,7 @@ def webrtc_builder(
 
     Args:
       name: builder name (str).
+      bucket: The name of the bucket the builder belongs to.
       recipe: string with the name of the recipe to run.
       dimensions: dict of Swarming dimensions (strings) to search machines by.
       properties: dict of properties to pass to the recipe (on top of the default ones).
@@ -477,8 +474,10 @@ def webrtc_builder(
             "server": "https://isolateserver.appspot.com",
         },
     })
+    resultdb_bq_table = "webrtc-ci.resultdb." + bucket + "_test_results"
     return luci.builder(
         name = name,
+        bucket = bucket,
         executable = recipe,
         dimensions = {k: v for k, v in dimensions.items() if v != None},
         properties = properties,
@@ -486,7 +485,12 @@ def webrtc_builder(
         priority = priority,
         build_numbers = True,
         swarming_tags = ["vpython:native-python-wrapper"],
-        resultdb_settings = resultdb.settings(enable = True),
+        resultdb_settings = resultdb.settings(
+            enable = True,
+            bq_exports = [
+                resultdb.export_test_results(bq_table = resultdb_bq_table),
+            ],
+        ),
         **kwargs
     )
 
