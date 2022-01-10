@@ -884,7 +884,6 @@ win_builder("Win32 Builder (Clang)", ci_cat = None, perf_cat = "Win|x86|Builder|
 win_perf_builder("Perf Win7", "Win|x86|Tester|7", triggered_by = ["Win32 Builder (Clang)"])
 win_builder("Win64 Debug (Clang)", "Win Clang|x64|dbg")
 win_try_job("win_x64_clang_dbg", cq = None)
-win_try_job("win_x64_clang_dbg_win8", cq = None)
 win_try_job("win_x64_clang_dbg_win10", cq = None)
 win_try_job("win_compile_x64_clang_dbg")
 win_builder("Win64 Release (Clang)", "Win Clang|x64|rel")
@@ -958,8 +957,6 @@ lkgr_config = {
                 # "WebRTC Chromium FYI Win10 Tester",
                 # TODO(bugs.webrtc.org/13544): Re-enable after 2 weeks.
                 # "WebRTC Chromium FYI Win7 Tester",
-                # TODO(bugs.webrtc.org/13544): Re-enable after 2 weeks.
-                # "WebRTC Chromium FYI Win8 Tester",
                 "WebRTC Chromium FYI ios-device",
                 "WebRTC Chromium FYI ios-simulator",
             ],
