@@ -939,24 +939,18 @@ lkgr_config = {
                 "WebRTC Chromium FYI Android Builder (dbg)",
                 "WebRTC Chromium FYI Android Builder ARM64 (dbg)",
                 "WebRTC Chromium FYI Android Builder",
-                # TODO(bugs.webrtc.org/13544): Re-enable after 2 weeks.
-                # "WebRTC Chromium FYI Android Tests (dbg) (M Nexus5X)",
-                # TODO(bugs.webrtc.org/13544): Re-enable after 2 weeks.
-                # "WebRTC Chromium FYI Android Tests (dbg) (N Nexus5X)",
+                "WebRTC Chromium FYI Android Tests (dbg) (M Nexus5X)",
+                "WebRTC Chromium FYI Android Tests (dbg) (N Nexus5X)",
                 "WebRTC Chromium FYI Linux Builder (dbg)",
                 "WebRTC Chromium FYI Linux Builder",
-                # TODO(bugs.webrtc.org/13544): Re-enable after 2 weeks.
-                # "WebRTC Chromium FYI Linux Tester",
+                "WebRTC Chromium FYI Linux Tester",
                 "WebRTC Chromium FYI Mac Builder (dbg)",
                 "WebRTC Chromium FYI Mac Builder",
-                # TODO(bugs.webrtc.org/13544): Re-enable after 2 weeks.
-                # "WebRTC Chromium FYI Mac Tester",
+                "WebRTC Chromium FYI Mac Tester",
                 "WebRTC Chromium FYI Win Builder (dbg)",
                 "WebRTC Chromium FYI Win Builder",
-                # TODO(bugs.webrtc.org/13544): Re-enable after 2 weeks.
-                # "WebRTC Chromium FYI Win10 Tester",
-                # TODO(bugs.webrtc.org/13544): Re-enable after 2 weeks.
-                # "WebRTC Chromium FYI Win7 Tester",
+                "WebRTC Chromium FYI Win10 Tester",
+                "WebRTC Chromium FYI Win7 Tester",
                 "WebRTC Chromium FYI ios-device",
                 "WebRTC Chromium FYI ios-simulator",
             ],
