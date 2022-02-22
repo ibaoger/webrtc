@@ -671,12 +671,24 @@ mac_builder, mac_try_job = normal_builder_factory(
     properties = make_goma_properties(),
 )
 
-ios_builder, ios_try_job = normal_builder_factory(
+ios_builder = normal_builder_factory(
+    dimensions = {"os": "Mac-10.15"},
+    properties = merge_dicts(
+        make_goma_properties(),
+        {"xcode_build_version": WEBRTC_IOS_XCODE_VERSION},
+    ),
+    caches = [swarming.cache(
+        name = "xcode_ios_" + WEBRTC_IOS_XCODE_VERSION,
+        path = "xcode_ios_" + WEBRTC_IOS_XCODE_VERSION + ".app",
+    )],
+)[0]
+
+ios_try_job = normal_builder_factory(
     dimensions = {"os": "Mac-10.15"},
     recipe = "ios",
     properties = merge_dicts(make_goma_properties(), WEBRTC_IOS_SDK_PROPERTY),
     caches = [swarming.cache("osx_sdk")],
-)
+)[1]
 
 ios_builder_macos11, ios_try_job_macos11 = normal_builder_factory(
     dimensions = {"os": "Mac-11"},
