@@ -14,6 +14,7 @@ WEBRTC_GIT = "https://webrtc.googlesource.com/src"
 WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
 WEBRTC_TROOPER_EMAIL = "webrtc-troopers-robots@google.com"
 WEBRTC_IOS_XCODE_VERSION = "12a7209"
+WEBRTC_XCODE13 = "13a233"
 WEBRTC_IOS_SDK_PROPERTY = {"$depot_tools/osx_sdk": {"sdk_version": WEBRTC_IOS_XCODE_VERSION}}
 
 # Helpers:
@@ -693,8 +694,14 @@ ios_try_job = normal_builder_factory(
 ios_builder_macos11, ios_try_job_macos11 = normal_builder_factory(
     dimensions = {"os": "Mac-11"},
     recipe = "ios",
-    properties = merge_dicts(make_goma_properties(), WEBRTC_IOS_SDK_PROPERTY),
-    caches = [swarming.cache("osx_sdk")],
+    properties = merge_dicts(
+        make_goma_properties(),
+        {"xcode_build_version": WEBRTC_XCODE13},
+    ),
+    caches = [swarming.cache(
+        name = "xcode_ios_" + WEBRTC_XCODE13,
+        path = "xcode_ios_" + WEBRTC_XCODE13 + ".app",
+    )],
 )
 
 # Actual builder configuration:
