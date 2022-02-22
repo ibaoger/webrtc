@@ -55,7 +55,7 @@ def make_goma_properties(enable_ats = None, jobs = None):
         "server_host": "goma.chromium.org",
         "use_luci_auth": True,
     }
-    if enable_ats:
+    if enable_ats != None:
         goma_properties["enable_ats"] = enable_ats
     if jobs:
         goma_properties["jobs"] = jobs
