@@ -16,31 +16,9 @@ WEBRTC_TROOPER_EMAIL = "webrtc-troopers-robots@google.com"
 WEBRTC_IOS_XCODE_VERSION = "12a7209"
 WEBRTC_XCODE13 = "13a233"
 WEBRTC_IOS_SDK_PROPERTY = {"$depot_tools/osx_sdk": {"sdk_version": WEBRTC_IOS_XCODE_VERSION}}
+DEFAULT_CPU = "x86-64"
 
 # Helpers:
-
-def merge_dicts(a, b):
-    """Return the result of merging two dicts.
-
-    If matching values are both dicts or both lists, they will be merged (non-recursively).
-
-    Args:
-      a: first dict.
-      b: second dict (takes priority).
-    Returns:
-      Merged dict.
-    """
-    a = dict(a)
-    for k, bv in b.items():
-        av = a.get(k)
-        if type(av) == "dict" and type(bv) == "dict":
-            a[k] = dict(av)
-            a[k].update(bv)
-        elif type(av) == "list" and type(bv) == "list":
-            a[k] = av + bv
-        else:
-            a[k] = bv
-    return a
 
 def make_goma_properties(enable_ats = True, jobs = None):
     """Makes a default goma property with the specified argument.
@@ -454,9 +432,9 @@ lkgr_builders = {}
 def webrtc_builder(
         name,
         bucket,
+        dimensions,
+        properties = None,
         recipe = "standalone",
-        dimensions = {},
-        properties = {},
         priority = 30,
         execution_timeout = 2 * time.hour,
         **kwargs):
@@ -465,9 +443,9 @@ def webrtc_builder(
     Args:
       name: builder name (str).
       bucket: The name of the bucket the builder belongs to.
-      recipe: string with the name of the recipe to run.
       dimensions: dict of Swarming dimensions (strings) to search machines by.
       properties: dict of properties to pass to the recipe (on top of the default ones).
+      recipe: string with the name of the recipe to run.
       priority: int [1-255] or None, indicating swarming task priority, lower is
         more important. If None, defer the decision to Buildbucket service.
       execution_timeout: int or None, how long to wait for a running build to finish before
@@ -477,18 +455,16 @@ def webrtc_builder(
     Returns:
       A luci.builder.
     """
-    dimensions = merge_dicts({"cpu": "x86-64"}, dimensions)
-    properties = merge_dicts(properties, {
-        "$recipe_engine/isolated": {
-            "server": "https://isolateserver.appspot.com",
-        },
-    })
+    properties = properties or {}
+    properties["$recipe_engine/isolated"] = {
+        "server": "https://isolateserver.appspot.com",
+    }
     resultdb_bq_table = "webrtc-ci.resultdb." + bucket + "_test_results"
     return luci.builder(
         name = name,
         bucket = bucket,
         executable = recipe,
-        dimensions = {k: v for k, v in dimensions.items() if v != None},
+        dimensions = dimensions,
         properties = properties,
         execution_timeout = execution_timeout,
         priority = priority,
@@ -506,9 +482,9 @@ def webrtc_builder(
 def ci_builder(
         name,
         ci_cat,
+        dimensions,
+        properties = None,
         perf_cat = None,
-        properties = {},
-        dimensions = {},
         prioritized = False,
         enabled = True,
         **kwargs):
@@ -517,9 +493,9 @@ def ci_builder(
     Args:
       name: builder name (str).
       ci_cat: the category + name for the /ci/ console, or None to omit from the console.
-      perf_cat: the category + name for the /perf/ console, or None to omit from the console.
-      properties: dict of properties to pass to the recipe (on top of the default ones).
       dimensions: dict of Swarming dimensions (strings) to search machines by.
+      properties: dict of properties to pass to the recipe (on top of the default ones).
+      perf_cat: the category + name for the /perf/ console, or None to omit from the console.
       prioritized: True to make this builder have a higher priority and never batch builds.
       enabled: False to exclude this builder from consoles and failure notifications.
       **kwargs: Pass on to webrtc_builder / luci.builder.
@@ -539,13 +515,17 @@ def ci_builder(
         add_milo(name, {"ci": ci_cat, "perf": perf_cat})
         if ci_cat:
             lkgr_builders[name] = True
+    dimensions.update({"pool": "luci.webrtc.ci", "cpu": kwargs.pop("cpu", DEFAULT_CPU)})
+    properties = properties or {}
+    properties["builder_group"] = "client.webrtc"
+    properties.update(make_goma_properties())
     notifies = ["post_submit_failure_notifier", "infra_failure_notifier"] if enabled and (ci_cat or perf_cat) else None
     if notifies and name not in skipped_lkgr_bots:
         notifies.append("webrtc_tree_closer")
     return webrtc_builder(
         name = name,
-        properties = merge_dicts({"builder_group": "client.webrtc"}, properties),
-        dimensions = merge_dicts({"pool": "luci.webrtc.ci"}, dimensions),
+        dimensions = dimensions,
+        properties = properties,
         bucket = "ci",
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         triggered_by = ["webrtc-gitiles-trigger-main"] if enabled else None,
@@ -556,26 +536,34 @@ def ci_builder(
 
 def try_builder(
         name,
+        dimensions,
+        properties = None,
         try_cat = True,
-        properties = {},
-        dimensions = {},
         cq = {},
         branch_cq = True,
+        goma_enable_ats = True,
+        goma_jobs = None,
         **kwargs):
     """Add a pre-submit builder.
 
     Args:
       name: builder name (str).
-      try_cat: boolean, whether to include this builder in the /try/ console. See also: `add_milo`.
-      properties: dict of properties to pass to the recipe (on top of the default ones).
       dimensions: dict of Swarming dimensions (strings) to search machines by.
+      properties: dict of properties to pass to the recipe (on top of the default ones).
+      try_cat: boolean, whether to include this builder in the /try/ console. See also: `add_milo`.
       cq: None to exclude this from all commit queues, or a dict of kwargs for cq_tryjob_verifier.
       branch_cq: False to exclude this builder just from the release-branch CQ.
+      goma_enable_ats: True if the ATS should be enabled by the builder.
+      goma_jobs: Number of jobs to be used by the builder.
       **kwargs: Pass on to webrtc_builder / luci.builder.
     Returns:
       A luci.builder.
     """
     add_milo(name, {"try": try_cat})
+    dimensions.update({"pool": "luci.webrtc.try", "cpu": DEFAULT_CPU})
+    properties = properties or {}
+    properties["builder_group"] = "tryserver.webrtc"
+    properties.update(make_goma_properties(enable_ats = goma_enable_ats, jobs = goma_jobs))
     if cq != None:
         luci.cq_tryjob_verifier(name, cq_group = "cq", **cq)
         if branch_cq:
@@ -583,25 +571,22 @@ def try_builder(
 
     return webrtc_builder(
         name = name,
-        properties = merge_dicts({"builder_group": "tryserver.webrtc"}, properties),
-        dimensions = merge_dicts({"pool": "luci.webrtc.try"}, dimensions),
+        dimensions = dimensions,
+        properties = properties,
         bucket = "try",
         service_account = "webrtc-try-builder@chops-service-accounts.iam.gserviceaccount.com",
         notifies = ["infra_failure_notifier"],
         **kwargs
     )
 
-def perf_builder(
-        name,
-        perf_cat,
-        **kwargs):
+def perf_builder(name, perf_cat, **kwargs):
     add_milo(name, {"perf": perf_cat})
     properties = make_goma_properties()
     properties["builder_group"] = "client.webrtc.perf"
     return webrtc_builder(
         name = name,
+        dimensions = {"pool": "luci.webrtc.perf", "os": "Linux"},
         properties = properties,
-        dimensions = {"pool": "luci.webrtc.perf", "os": "Linux", "cpu": None},
         bucket = "perf",
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         # log_base of 1.7 means:
@@ -621,7 +606,7 @@ def cron_builder(name, service_account = None, **kwargs):
     add_milo(name, {"cron": True})
     return webrtc_builder(
         name = name,
-        dimensions = {"pool": "luci.webrtc.cron", "os": "Linux"},
+        dimensions = {"pool": "luci.webrtc.cron", "os": "Linux", "cpu": DEFAULT_CPU},
         bucket = "cron",
         service_account = service_account,
         notifies = ["cron_notifier"],
@@ -630,10 +615,12 @@ def cron_builder(name, service_account = None, **kwargs):
 
 def normal_builder_factory(**common_kwargs):
     def builder(*args, **kwargs):
-        return ci_builder(*args, **merge_dicts(common_kwargs, kwargs))
+        kwargs.update(common_kwargs)
+        return ci_builder(*args, **kwargs)
 
-    def try_job(*args, **kwargs):
-        return try_builder(*args, **merge_dicts(common_kwargs, kwargs))
+    def try_job(name, **kwargs):
+        kwargs.update(common_kwargs)
+        return try_builder(name, **kwargs)
 
     return builder, try_job
 
@@ -641,42 +628,28 @@ def normal_builder_factory(**common_kwargs):
 
 linux_builder, linux_try_job = normal_builder_factory(
     dimensions = {"os": "Linux", "inside_docker": "0"},
-    properties = make_goma_properties(),
 )
 
 android_builder, android_try_job = normal_builder_factory(
     dimensions = {"os": "Linux"},
-    properties = make_goma_properties(),
 )
 
-def win_builder(name, ci_cat, **kwargs):
-    return ci_builder(
-        name,
-        ci_cat,
-        dimensions = {"os": "Windows"},
-        properties = make_goma_properties(),
-        **kwargs
-    )
+win_builder = normal_builder_factory(
+    dimensions = {"os": "Windows"},
+)[0]
 
-def win_try_job(name, goma_jobs = None, **kwargs):
-    return try_builder(
-        name,
-        dimensions = {"os": "Windows"},
-        properties = make_goma_properties(enable_ats = False, jobs = goma_jobs),
-        **kwargs
-    )
+win_try_job = normal_builder_factory(
+    dimensions = {"os": "Windows"},
+    goma_enable_ats = False,
+)[1]
 
 mac_builder, mac_try_job = normal_builder_factory(
     dimensions = {"os": "Mac"},
-    properties = make_goma_properties(),
 )
 
 ios_builder = normal_builder_factory(
     dimensions = {"os": "Mac-10.15"},
-    properties = merge_dicts(
-        make_goma_properties(),
-        {"xcode_build_version": WEBRTC_IOS_XCODE_VERSION},
-    ),
+    properties = {"xcode_build_version": WEBRTC_IOS_XCODE_VERSION},
     caches = [swarming.cache(
         name = "xcode_ios_" + WEBRTC_IOS_XCODE_VERSION,
         path = "xcode_ios_" + WEBRTC_IOS_XCODE_VERSION + ".app",
@@ -686,17 +659,13 @@ ios_builder = normal_builder_factory(
 ios_try_job = normal_builder_factory(
     dimensions = {"os": "Mac-10.15"},
     recipe = "ios",
-    properties = merge_dicts(make_goma_properties(), WEBRTC_IOS_SDK_PROPERTY),
+    properties = WEBRTC_IOS_SDK_PROPERTY,
     caches = [swarming.cache("osx_sdk")],
 )[1]
 
 ios_builder_macos11, ios_try_job_macos11 = normal_builder_factory(
     dimensions = {"os": "Mac-11"},
-    recipe = "ios",
-    properties = merge_dicts(
-        make_goma_properties(),
-        {"xcode_build_version": WEBRTC_XCODE13},
-    ),
+    properties = {"xcode_build_version": WEBRTC_XCODE13},
     caches = [swarming.cache(
         name = "xcode_ios_" + WEBRTC_XCODE13,
         path = "xcode_ios_" + WEBRTC_XCODE13 + ".app",
@@ -795,7 +764,7 @@ perf_builder("Perf Mac 10.11", "Mac|x64|Tester|10.11", triggered_by = ["Mac64 Bu
 mac_builder("Mac Asan", "Mac|x64|asan")
 mac_try_job("mac_asan")
 mac_try_job("mac_chromium_compile", recipe = "chromium_trybot", branch_cq = False)
-mac_builder("MacARM64 M1 Release", "Mac|arm64M1|rel", dimensions = {"cpu": "arm64-64-Apple_M1"})
+mac_builder("MacARM64 M1 Release", "Mac|arm64M1|rel", cpu = "arm64-64-Apple_M1")
 mac_try_job("mac_rel_m1", try_cat = None, cq = None)
 mac_try_job("mac_dbg_m1", try_cat = None, cq = None)
 
