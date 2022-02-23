@@ -42,7 +42,7 @@ def merge_dicts(a, b):
             a[k] = bv
     return a
 
-def make_goma_properties(enable_ats = None, jobs = None):
+def make_goma_properties(enable_ats = True, jobs = None):
     """Makes a default goma property with the specified argument.
 
     Args:
@@ -55,7 +55,7 @@ def make_goma_properties(enable_ats = None, jobs = None):
         "server_host": "goma.chromium.org",
         "use_luci_auth": True,
     }
-    if enable_ats != None:
+    if not enable_ats:
         goma_properties["enable_ats"] = enable_ats
     if jobs:
         goma_properties["jobs"] = jobs
@@ -594,10 +594,9 @@ def try_builder(
 def perf_builder(
         name,
         perf_cat,
-        goma_enable_ats = None,
         **kwargs):
     add_milo(name, {"perf": perf_cat})
-    properties = make_goma_properties(goma_enable_ats)
+    properties = make_goma_properties()
     properties["builder_group"] = "client.webrtc.perf"
     return webrtc_builder(
         name = name,
@@ -655,7 +654,7 @@ def win_builder(name, ci_cat, **kwargs):
         name,
         ci_cat,
         dimensions = {"os": "Windows"},
-        properties = make_goma_properties(enable_ats = True),
+        properties = make_goma_properties(),
         **kwargs
     )
 
@@ -807,7 +806,7 @@ win_builder("Win32 Release (Clang)", "Win Clang|x86|rel")
 win_try_job("win_x86_clang_rel")
 win_try_job("win_compile_x86_clang_rel", cq = None)
 win_builder("Win32 Builder (Clang)", ci_cat = None, perf_cat = "Win|x86|Builder|")
-perf_builder("Perf Win7", "Win|x86|Tester|7", triggered_by = ["Win32 Builder (Clang)"], goma_enable_ats = True)
+perf_builder("Perf Win7", "Win|x86|Tester|7", triggered_by = ["Win32 Builder (Clang)"])
 win_builder("Win64 Debug (Clang)", "Win Clang|x64|dbg")
 win_try_job("win_x64_clang_dbg", cq = None)
 win_try_job("win_x64_clang_dbg_win10", cq = None)
