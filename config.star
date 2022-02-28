@@ -385,7 +385,6 @@ recipe("webrtc/auto_roll_webrtc_deps")
 recipe("webrtc/ios")
 recipe("webrtc/ios_api_framework")
 recipe("webrtc/libfuzzer")
-recipe("webrtc/more_configs")
 recipe("webrtc/standalone")
 recipe("webrtc/update_webrtc_binary_version")
 recipe("lkgr_finder", pkg = "infra/recipe_bundles/chromium.googlesource.com/chromium/tools/build")
@@ -425,7 +424,7 @@ def add_milo(builder, views):
         else:
             fail("Unexpected value for category: %r" % category)
 
-lkgr_builders = {}
+lkgr_builders = []
 
 # Builder-defining functions:
 
@@ -514,14 +513,13 @@ def ci_builder(
     if enabled:
         add_milo(name, {"ci": ci_cat, "perf": perf_cat})
         if ci_cat:
-            lkgr_builders[name] = True
+            lkgr_builders.append(name)
     dimensions.update({"pool": "luci.webrtc.ci", "cpu": kwargs.pop("cpu", DEFAULT_CPU)})
     properties = properties or {}
     properties["builder_group"] = "client.webrtc"
     properties.update(make_goma_properties())
-    notifies = ["post_submit_failure_notifier", "infra_failure_notifier"] if enabled and (ci_cat or perf_cat) else None
-    if notifies and name not in skipped_lkgr_bots:
-        notifies.append("webrtc_tree_closer")
+    notifies = ["post_submit_failure_notifier", "infra_failure_notifier"]
+    notifies += ["webrtc_tree_closer"] if name not in skipped_lkgr_bots else []
     return webrtc_builder(
         name = name,
         dimensions = dimensions,
@@ -530,7 +528,7 @@ def ci_builder(
         service_account = "webrtc-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         triggered_by = ["webrtc-gitiles-trigger-main"] if enabled else None,
         repo = WEBRTC_GIT,
-        notifies = notifies,
+        notifies = notifies if enabled else None,
         **kwargs
     )
 
@@ -698,8 +696,8 @@ android_builder("Android32 Builder x86 (dbg)", "Android|x86|dbg")
 android_try_job("android_compile_x86_dbg")
 android_builder("Android32 Builder x86", "Android|x86|rel")
 android_try_job("android_compile_x86_rel")
-android_builder("Android32 (more configs)", "Android|arm|more", recipe = "more_configs")
-android_try_job("android_arm_more_configs", recipe = "more_configs")
+android_builder("Android32 (more configs)", "Android|arm|more")
+android_try_job("android_arm_more_configs")
 android_try_job("android_chromium_compile", recipe = "chromium_trybot", branch_cq = False)
 
 ios_builder("iOS64 Debug", "iOS|arm64|dbg")
@@ -748,8 +746,8 @@ linux_builder("Linux UBSan vptr", "Linux|x64|ubsan")
 linux_try_job("linux_ubsan_vptr")
 linux_builder("Linux64 Release (Libfuzzer)", "Linux|x64|fuzz", recipe = "libfuzzer")
 linux_try_job("linux_libfuzzer_rel", recipe = "libfuzzer")
-linux_builder("Linux (more configs)", "Linux|x64|more", recipe = "more_configs")
-linux_try_job("linux_more_configs", recipe = "more_configs")
+linux_builder("Linux (more configs)", "Linux|x64|more")
+linux_try_job("linux_more_configs")
 linux_try_job("linux_chromium_compile", recipe = "chromium_trybot", branch_cq = False)
 linux_try_job("linux_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False)
 
@@ -785,8 +783,8 @@ win_try_job("win_x64_clang_rel", cq = None)
 win_try_job("win_compile_x64_clang_rel")
 win_builder("Win64 ASan", "Win Clang|x64|asan")
 win_try_job("win_asan")
-win_builder("Win (more configs)", "Win Clang|x86|more", recipe = "more_configs")
-win_try_job("win_x86_more_configs", recipe = "more_configs")
+win_builder("Win (more configs)", "Win Clang|x86|more")
+win_try_job("win_x86_more_configs")
 win_try_job("win_chromium_compile", recipe = "chromium_trybot", branch_cq = False, goma_jobs = 150)
 win_try_job("win_chromium_compile_dbg", recipe = "chromium_trybot", branch_cq = False, goma_jobs = 150)
 
