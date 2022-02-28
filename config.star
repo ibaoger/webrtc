@@ -15,7 +15,6 @@ WEBRTC_GERRIT = "https://webrtc-review.googlesource.com/src"
 WEBRTC_TROOPER_EMAIL = "webrtc-troopers-robots@google.com"
 WEBRTC_IOS_XCODE_VERSION = "12a7209"
 WEBRTC_XCODE13 = "13a233"
-WEBRTC_IOS_SDK_PROPERTY = {"$depot_tools/osx_sdk": {"sdk_version": WEBRTC_IOS_XCODE_VERSION}}
 DEFAULT_CPU = "x86-64"
 
 # Helpers:
@@ -382,7 +381,6 @@ def recipe(recipe, pkg = "infra/recipe_bundles/chromium.googlesource.com/chromiu
 recipe("chromium_trybot")
 recipe("run_presubmit")
 recipe("webrtc/auto_roll_webrtc_deps")
-recipe("webrtc/ios")
 recipe("webrtc/ios_api_framework")
 recipe("webrtc/libfuzzer")
 recipe("webrtc/standalone")
@@ -645,21 +643,14 @@ mac_builder, mac_try_job = normal_builder_factory(
     dimensions = {"os": "Mac"},
 )
 
-ios_builder = normal_builder_factory(
+ios_builder, ios_try_job = normal_builder_factory(
     dimensions = {"os": "Mac-10.15"},
     properties = {"xcode_build_version": WEBRTC_IOS_XCODE_VERSION},
     caches = [swarming.cache(
         name = "xcode_ios_" + WEBRTC_IOS_XCODE_VERSION,
         path = "xcode_ios_" + WEBRTC_IOS_XCODE_VERSION + ".app",
     )],
-)[0]
-
-ios_try_job = normal_builder_factory(
-    dimensions = {"os": "Mac-10.15"},
-    recipe = "ios",
-    properties = WEBRTC_IOS_SDK_PROPERTY,
-    caches = [swarming.cache("osx_sdk")],
-)[1]
+)
 
 ios_builder_macos11, ios_try_job_macos11 = normal_builder_factory(
     dimensions = {"os": "Mac-11"},
